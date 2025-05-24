@@ -1,0 +1,29 @@
+import { Component, inject, OnInit} from '@angular/core';
+import { Proveedor } from '../proveedor';
+import { ProveedorService } from '../services/proveedor.service';
+
+@Component({
+  selector: 'app-proveedor-lista',
+  imports: [],
+  templateUrl: './proveedores-lista.component.html',
+})
+export class ProveedorListaComponent implements OnInit {
+  proveedores: Proveedor[] = [];
+
+  private proveedorServicio = inject(ProveedorService)
+  
+  ngOnInit(){
+    this.obtenerProveedores();
+  }
+
+  private obtenerProveedores(): void {
+    this.proveedorServicio.ObtenerProveedoresLista().subscribe({
+      next: (datos) => {
+        this.proveedores = datos;
+      },
+      error: (error) => {
+        console.error('Error al obtener la lista de proveedores', error);
+      }
+    });
+  }
+}

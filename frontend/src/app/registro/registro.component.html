@@ -1,0 +1,50 @@
+<form [formGroup]="registroForm" (ngSubmit)="onSubmit()" class="registro-form container p-4 shadow rounded"
+  style="max-width: 480px; margin-top: 50px; background: #f9fbff; font-family: 'Poppins', sans-serif;">
+  <h2 class="mb-4 text-center" style="font-weight: 800; color: #182848;">
+    Registro de Usuario
+  </h2>
+
+  <div class="mb-3 position-relative">
+    <label for="nombre" class="form-label fw-semibold text-primary">Nombre:</label>
+    <div class="input-group">
+      <span class="input-group-text bg-primary text-white">
+        <i class="bi bi-person-fill"></i>
+      </span>
+      <input id="nombre" formControlName="nombre" type="text" class="form-control" placeholder="Ingrese su nombre" />
+    </div>
+  </div>
+
+  <div class="mb-3 position-relative">
+    <label for="email" class="form-label fw-semibold text-primary">Correo electrónico:</label>
+    <div class="input-group">
+      <span class="input-group-text bg-primary text-white">
+        <i class="bi bi-envelope-fill"></i>
+      </span>
+      <input id="email" formControlName="email" type="email" class="form-control" placeholder="ejemplo@correo.com" />
+    </div>
+  </div>
+
+  <div class="mb-3 position-relative">
+    <label for="contrasena" class="form-label fw-semibold text-primary">Contraseña:</label>
+    <div class="input-group">
+      <span class="input-group-text bg-primary text-white">
+        <i class="bi bi-lock-fill"></i>
+      </span>
+      <input id="contrasena" formControlName="contrasena" type="password" class="form-control"
+        placeholder="Mínimo 6 caracteres" />
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <label for="rol" class="form-label fw-semibold text-primary">Rol:</label>
+    <div class="form-control" style="background-color: #e9ecef; cursor: not-allowed; color: #6c757d; font-weight: 600;">
+      Cliente
+    </div>
+  </div>
+
+
+  <button type="submit" class="btn btn-primary w-100 fw-bold" [disabled]="registroForm.invalid"
+    style="font-size: 1.1rem; padding: 10px;">
+    <i class="bi bi-check-circle me-2"></i> Registrar
+  </button>
+</form>

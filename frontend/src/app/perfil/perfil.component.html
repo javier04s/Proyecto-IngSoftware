@@ -1,0 +1,52 @@
+<div class="perfil container p-4 shadow rounded"
+  style="max-width: 600px; margin-top: 50px; background: #f9fbff; font-family: 'Poppins', sans-serif; color: #182848;">
+  <h2 class="mb-4 text-center" style="font-weight: 800; color: #182848;">
+    Perfil de Usuario
+  </h2>
+
+  <div class="mb-3 position-relative">
+    <label class="form-label fw-semibold text-primary">
+      Nombre:
+    </label>
+    <div class="input-group">
+      <span class="input-group-text bg-primary text-white">
+        <i class="bi bi-person-fill"></i>
+      </span>
+      <input type="text" class="form-control" [value]="usuario?.nombre" readonly
+        style="background-color: #e9ecef; color: #212529;">
+    </div>
+  </div>
+
+  <div class="mb-3 position-relative">
+    <label class="form-label fw-semibold text-primary">
+      Correo electrónico:
+    </label>
+    <div class="input-group">
+      <span class="input-group-text bg-primary text-white">
+        <i class="bi bi-envelope-fill"></i>
+      </span>
+      <input type="email" class="form-control" [value]="usuario?.email" readonly
+        style="background-color: #e9ecef; color: #212529;">
+    </div>
+  </div>
+
+  <div class="mb-4 position-relative">
+    <label class="form-label fw-semibold text-primary">
+      Rol:
+    </label>
+    <div class="input-group">
+      <span class="input-group-text bg-primary text-white">
+        <i class="bi bi-shield-lock-fill"></i>
+      </span>
+      <input type="text" class="form-control" [value]="usuario?.rol" readonly
+        style="background-color: #e9ecef; color: #212529;">
+    </div>
+  </div>
+
+  <div *ngIf="esAdmin" class="text-center mt-4">
+    <button class="btn btn-primary" (click)="irAListaUsuarios()">
+      Ver Usuarios Registrados
+    </button>
+  </div>
+
+</div>

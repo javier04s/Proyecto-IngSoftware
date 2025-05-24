@@ -1,0 +1,21 @@
+.custom-nav-link {
+  transition: background-color 0.3s ease, color 0.3s ease;
+  padding: 6px 14px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.custom-nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #fbfbfb !important;
+  text-decoration: none;
+}
+
+.active-link {
+  background-color: #f0a500 !important;
+  color: #182848 !important;
+  font-weight: 700;
+  border-radius: 6px;
+  padding: 6px 14px;
+  box-shadow: 0 3px 6px rgba(240, 165, 0, 0.4);
+}
