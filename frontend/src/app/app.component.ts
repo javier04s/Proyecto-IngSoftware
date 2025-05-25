@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar.component';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -16,4 +17,8 @@ import { NavbarComponent } from './navbar/navbar.component';
 })
 export class AppComponent {
   title = 'Corpomotriz Los Salias';
+
+  constructor(private authService: AuthService) {
+    // No es necesario cargar usuario explícitamente aquí porque el servicio ya lo hace.
+  }
 }

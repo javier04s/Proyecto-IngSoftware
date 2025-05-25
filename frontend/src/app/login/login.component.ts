@@ -33,20 +33,31 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.loginForm.valid) {
-      const { email, contrasena } = this.loginForm.value;
-      this.usuarioService.login(email, contrasena).subscribe({
-        next: (response) => {
-          // Guardar usuario y token en el servicio
-          this.usuarioService.setUsuario(response.usuario, response.token);
-
-          alert(response.message);
-          this.router.navigate(['/dashboard']);
-        },
-        error: (err) => {
-          this.errorMessage = err.error?.message || 'Credenciales inválidas o error de servidor.';
-        }
-      });
+    if (this.loginForm.invalid) {
+      return;
     }
+
+    this.errorMessage = null;
+    this.isLoading = true;
+
+    const { email, contrasena } = this.loginForm.value;
+
+    this.usuarioService.login(email, contrasena).subscribe({
+      next: (response) => {
+        this.usuarioService.setUsuario(response.usuario, response.token);
+        this.isLoading = false;
+
+        // ✅ Recargar la página tras 1 segundo
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.errorMessage = err.error?.message || 'Credenciales inválidas o error de servidor.';
+      }
+    });
   }
 }

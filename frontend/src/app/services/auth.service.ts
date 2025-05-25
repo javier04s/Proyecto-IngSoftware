@@ -1,4 +1,3 @@
-// auth.service.ts
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
@@ -19,7 +18,7 @@ export class AuthService {
   public usuario$: Observable<Usuario | null>;
 
   constructor() {
-    // Carga el usuario almacenado en localStorage al inicializar el servicio
+    // Carga inicial automática desde localStorage
     const usuarioJson = localStorage.getItem('usuario');
     this.usuarioSubject = new BehaviorSubject<Usuario | null>(
       usuarioJson ? JSON.parse(usuarioJson) : null
@@ -27,26 +26,38 @@ export class AuthService {
     this.usuario$ = this.usuarioSubject.asObservable();
   }
 
-  // Getter para obtener el valor actual del usuario
   public get usuarioValue(): Usuario | null {
     return this.usuarioSubject.value;
   }
 
-  // Método para actualizar el usuario y almacenar token
-  login(usuario: Usuario) {
-    // Guarda usuario + token en localStorage para persistencia
-    localStorage.setItem('usuario', JSON.stringify(usuario));
-    this.usuarioSubject.next(usuario);
+  /**
+   * Guarda el usuario y token en el BehaviorSubject y localStorage.
+   * @param usuario Objeto usuario (sin token)
+   * @param token Token JWT
+   */
+  login(usuario: Omit<Usuario, 'token'>, token: string) {
+    const usuarioConToken: Usuario = { ...usuario, token };
+    localStorage.setItem('usuario', JSON.stringify(usuarioConToken));
+    this.usuarioSubject.next(usuarioConToken);
   }
 
-  // Método para cerrar sesión
   logout() {
     localStorage.removeItem('usuario');
     this.usuarioSubject.next(null);
   }
 
-  // Método para verificar si está autenticado
-  public isAuthenticated(): boolean {
+  isAuthenticated(): boolean {
     return !!this.usuarioValue?.token;
+  }
+
+
+  /**
+   * Recarga el usuario almacenado en localStorage (útil para APP_INITIALIZER)
+   */
+  cargarUsuarioDesdeStorage(): void {
+    const usuarioJson = localStorage.getItem('usuario');
+    if (usuarioJson) {
+      this.usuarioSubject.next(JSON.parse(usuarioJson));
+    }
   }
 }

@@ -1,26 +1,45 @@
-import { Component, inject, OnInit} from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { Proveedor } from '../proveedor';
 import { ProveedorService } from '../services/proveedor.service';
+import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-proveedor-lista',
-  imports: [],
   templateUrl: './proveedores-lista.component.html',
 })
-export class ProveedorListaComponent implements OnInit {
+export class ProveedorListaComponent implements OnInit, OnDestroy {
   proveedores: Proveedor[] = [];
 
-  private proveedorServicio = inject(ProveedorService)
+  private proveedorService = inject(ProveedorService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private usuarioSub?: Subscription;
 
-  constructor(private router: Router) {}
-  
-  ngOnInit(){
-    this.obtenerProveedores();
+  ngOnInit() {
+    this.usuarioSub = this.authService.usuario$.subscribe(usuario => {
+      if (usuario && usuario.token) {
+        console.log("ProveedorListaComponent: Usuario autenticado");
+
+        // Recarga la lista solo una vez después de 1 segundo
+        this.obtenerProveedores();
+
+      } else {
+        console.warn("ProveedorListaComponent: Usuario no autenticado");
+        this.proveedores = [];
+
+      }
+    });
+  }
+
+
+  ngOnDestroy() {
+    this.usuarioSub?.unsubscribe();
   }
 
   private obtenerProveedores(): void {
-    this.proveedorServicio.ObtenerProveedoresLista().subscribe({
+    this.proveedorService.ObtenerProveedoresLista().subscribe({
       next: (datos) => {
         this.proveedores = datos;
       },
