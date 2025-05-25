@@ -9,11 +9,13 @@ export interface Usuario {
   email: string;
   rol: string;
   fechaCreacion: string;
+  token?: string;
 }
 
 export interface LoginResponse {
   message: string;
   usuario: Usuario;
+  token: string;
 }
 
 @Injectable({
@@ -47,9 +49,18 @@ export class UsuarioService {
     );
   }
 
-  setUsuario(usuario: Usuario): void {
-    this.usuarioSubject.next(usuario);
-    localStorage.setItem('usuario', JSON.stringify(usuario));
+  setUsuario(usuario: Usuario, token: string): void {
+    const usuarioConToken = { ...usuario, token };
+    this.usuarioSubject.next(usuarioConToken);
+    localStorage.setItem('usuario', JSON.stringify(usuarioConToken));
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
+  isAuthenticated(): boolean {
+    return !!this.getToken();
   }
 
   clearUsuario(): void {
@@ -71,6 +82,7 @@ export class UsuarioService {
 
   logout(): void {
     localStorage.removeItem('usuario');
+    localStorage.removeItem('token');
     this.usuarioSubject.next(null);
   }
 

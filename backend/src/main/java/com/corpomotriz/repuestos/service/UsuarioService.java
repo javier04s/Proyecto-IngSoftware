@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService {
@@ -24,37 +23,30 @@ public class UsuarioService {
 
     public List<UsuarioDTO> getAllUsuarios() {
         return usuarioRepository.findAll().stream()
-                .map(this::convertirAUsuarioDTO)
-                .collect(Collectors.toList());
+                .map(this::toDTO)
+                .toList();
     }
 
     public Optional<UsuarioDTO> getUsuarioById(Integer id) {
         return usuarioRepository.findById(id)
-                .map(this::convertirAUsuarioDTO);
+                .map(this::toDTO);
     }
 
-    public UsuarioDTO createUser(UsuarioCrearDTO usuarioCrearDTO) {
+    public UsuarioDTO createUser(UsuarioCrearDTO dto) {
         Usuario usuario = Usuario.builder()
-                .nombre(usuarioCrearDTO.getNombre())
-                .email(usuarioCrearDTO.getEmail())
-                .contrasena(passwordEncoder.encode(usuarioCrearDTO.getContrasena()))
-                .rol(usuarioCrearDTO.getRol() != null ? usuarioCrearDTO.getRol() : "CLIENTE")
+                .nombre(dto.getNombre())
+                .email(dto.getEmail())
+                .contrasena(passwordEncoder.encode(dto.getContrasena()))
+                .rol(dto.getRol() != null ? dto.getRol() : "CLIENTE")
                 .fechaCreacion(LocalDateTime.now())
                 .build();
 
-        Usuario usuarioGuardado = usuarioRepository.save(usuario);
-        return convertirAUsuarioDTO(usuarioGuardado);
+        return toDTO(usuarioRepository.save(usuario));
     }
 
-    public String getUserRoleByEmail(String email) {
-        return usuarioRepository.findByEmail(email)
-                .map(Usuario::getRol)
-                .orElse("SIN_ROL");
-    }
-
-    private UsuarioDTO convertirAUsuarioDTO(Usuario usuario) {
+    private UsuarioDTO toDTO(Usuario usuario) {
         return UsuarioDTO.builder()
-                .id(Math.toIntExact(usuario.getId()))
+                .id(usuario.getId().intValue())
                 .nombre(usuario.getNombre())
                 .email(usuario.getEmail())
                 .rol(usuario.getRol())

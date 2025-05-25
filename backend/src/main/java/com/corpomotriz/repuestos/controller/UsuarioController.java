@@ -18,14 +18,11 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    // Crear perfil
     @PostMapping
-    public ResponseEntity<UsuarioDTO> crearPerfil(@Valid @RequestBody UsuarioCrearDTO usuarioCrearDTO) {
-        UsuarioDTO nuevoUsuario = usuarioService.createUser(usuarioCrearDTO);
-        return ResponseEntity.ok(nuevoUsuario);
+    public ResponseEntity<UsuarioDTO> crearPerfil(@Valid @RequestBody UsuarioCrearDTO dto) {
+        return ResponseEntity.ok(usuarioService.createUser(dto));
     }
 
-    // Examinar perfil
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> listarUsuarios() {
@@ -38,5 +35,4 @@ public class UsuarioController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
 }

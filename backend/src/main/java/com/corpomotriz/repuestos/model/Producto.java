@@ -28,7 +28,7 @@ public class Producto {
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "proveedor_id", nullable = false)
     private Proveedor proveedor;
 

@@ -13,5 +13,4 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
 
     @Query("SELECT p FROM Producto p LEFT JOIN FETCH p.proveedor WHERE p.id = :id")
     Optional<Producto> findByIdWithProveedor(@Param("id") Integer id);
-
 }

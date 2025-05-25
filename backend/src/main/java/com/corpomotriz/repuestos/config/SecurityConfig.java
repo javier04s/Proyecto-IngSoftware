@@ -20,23 +20,27 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private static final String ROLE_ADMIN = "ADMINISTRADOR";
+    private static final String ROLE_CLIENTE = "CLIENTE";
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(withDefaults()) // Activa configuración CORS
-                .csrf(csrf -> csrf.disable()) // Desactiva CSRF para APIs REST
+                .cors(withDefaults())
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login").permitAll() // Permitir login sin autenticación
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/auth/login").permitAll()
                         .requestMatchers("/usuarios").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/productos").hasRole("ADMINISTRADOR")
-                        .requestMatchers(HttpMethod.GET, "/productos").permitAll()
                         .requestMatchers(HttpMethod.GET, "/productos/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/proveedores/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/proveedores").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/pagos").hasAnyRole("CLIENTE", "ADMINISTRADOR")
-                        .requestMatchers(HttpMethod.PUT, "/pagos/**").hasRole("ADMINISTRADOR")
-                        .requestMatchers(HttpMethod.GET, "/usuarios/**").hasRole("ADMINISTRADOR")
-                        .requestMatchers(HttpMethod.GET, "/perfil/**").hasRole("ADMINISTRADOR")
+                        .requestMatchers(HttpMethod.GET, "/proveedores/**").permitAll()
+
+                        .requestMatchers(HttpMethod.POST, "/productos").hasRole(ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.POST, "/pagos").hasAnyRole(ROLE_CLIENTE, ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.PUT, "/pagos/**").hasRole(ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.GET, "/usuarios/**").hasRole(ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.GET, "/perfil/**").hasRole(ROLE_ADMIN)
+
                         .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults());
@@ -44,11 +48,10 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // Configuración CORS personalizada para permitir solicitudes desde Angular
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // Origen frontend
+        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
