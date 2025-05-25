@@ -56,4 +56,7 @@ export class ProductoListaComponent implements OnInit {
     this.router.navigate(['/productos', id]);
   }
 
+  interfazAggProducto(): void {
+    this.router.navigate(['/productos/nuevos']);
+  }
 }

@@ -8,6 +8,7 @@ import { ProductoDetalleComponent } from './producto-detalle/producto-detalle.co
 import { ListaUsuariosComponent } from './lista-usuarios/lista-usuarios.component';
 import { ProveedorListaComponent } from './proveedores-lista/proveedores-lista.component';
 import { AgregarProductoComponent } from './agregar-producto/agregar-producto.component';
+import { ProveedoresAgregarComponent } from './proveedores-agregar/proveedores-agregar.component';
 
 export const routes: Routes = [
   {path: 'productos', component: ProductoListaComponent},
@@ -19,5 +20,6 @@ export const routes: Routes = [
   {path: 'perfil', component: PerfilComponent},
   {path: 'pagos', component: PagosComponent},
   {path: 'usuarios/registrados', component: ListaUsuariosComponent},
-  {path: 'proveedores', component: ProveedorListaComponent}
+  {path: 'proveedores', component: ProveedorListaComponent},
+  {path: 'proveedores/agregar', component: ProveedoresAgregarComponent},
 ];

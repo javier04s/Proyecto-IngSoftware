@@ -2,7 +2,7 @@
     <div class="container text-center" style="margin:30px">
         <h2> <i class="bi bi-truck"></i> Listado de proveedores</h2>
     </div>
-    <table class="table table-hover align-middle">
+    <table class="table table-hover table-striped align-middle">
   <thead>
     <tr>
       <th scope="col" style="background-color: #041f3d;"><i class="bi bi-qr-code"></i> ID</th>
@@ -28,7 +28,17 @@
     }
   </tbody>
 </table>
-<div class="container2 text-center" style="margin: 30px;"></div>
-  <button type="button" class="btn btn-dark" style="background-color:#100B5C;
-  display:flex; flex-direction: row-reverse; justify-content: flex-start; flex-wrap: nowrap; align-items: flex-start; align-content: flex-start;">Añadir proveedores</button>
+<div class="container2 text-center" style="margin: 30px;">
+  <button type="button" class="btn btn-dark" (click)="interfazAggProveedor()"
+  style="background-color:#004A24;
+  display:flex; flex-direction: row-reverse; justify-content: flex-start; flex-wrap: nowrap; align-items: center; align-content: flex-start;
+  gap: 10px;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease, transform 0.2s ease;"
+  onmouseover="this.style.backgroundColor='#005E2C'; this.style.transform='scale(1.05)';"
+  onmouseout="this.style.backgroundColor='#004A24'; this.style.transform='scale(1)';">
+  <span>Añadir proveedores</span>
+  <i class="bi bi-bag-plus"></i>
+</button>
+</div>
 </div>
