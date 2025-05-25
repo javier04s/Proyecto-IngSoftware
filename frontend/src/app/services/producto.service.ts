@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Producto, ProductoCrearDTO } from '../producto';
+import { Proveedor } from '../proveedor'; 
 
 @Injectable({
   providedIn: 'root'
@@ -17,13 +18,13 @@ export class ProductoService {
   }
 
   agregarProducto(producto: ProductoCrearDTO) {
-    return this.clienteHttp.post<Producto>(`${this.urlBase}/productos`, producto);
+    return this.clienteHttp.post<Producto>(this.urlBase, producto);
   }
 
   getProductoById(id: number) {
     return this.clienteHttp.get<Producto>(`http://localhost:8080/productos/${id}`);
   }
-
-
-
-}
+  obtenerProveedores(): Observable<Proveedor[]> {
+    return this.clienteHttp.get<Proveedor[]>('http://localhost:8080/proveedores');
+  }
+  }

@@ -7,9 +7,11 @@ import { PagosComponent } from './pagos/pagos.component';
 import { ProductoDetalleComponent } from './producto-detalle/producto-detalle.component';
 import { ListaUsuariosComponent } from './lista-usuarios/lista-usuarios.component';
 import { ProveedorListaComponent } from './proveedores-lista/proveedores-lista.component';
+import { AgregarProductoComponent } from './agregar-producto/agregar-producto.component';
 
 export const routes: Routes = [
   {path: 'productos', component: ProductoListaComponent},
+  {path: 'productos/nuevos', component: AgregarProductoComponent},
   {path: '', redirectTo: 'productos', pathMatch: 'full'},
   {path: 'productos/:id', component: ProductoDetalleComponent}, 
   {path: 'registro', component: RegistroComponent},
