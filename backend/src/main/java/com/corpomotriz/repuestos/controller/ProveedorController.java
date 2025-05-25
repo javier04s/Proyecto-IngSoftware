@@ -3,10 +3,12 @@ package com.corpomotriz.repuestos.controller;
 import com.corpomotriz.repuestos.dto.crear.ProveedorCrearDTO;
 import com.corpomotriz.repuestos.dto.ProveedorDTO;
 import com.corpomotriz.repuestos.service.ProveedorService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -19,15 +21,19 @@ public class ProveedorController {
         this.proveedorService = proveedorService;
     }
 
+    // Solo ADMINISTRADOR puede agregar proveedores
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
-    public ResponseEntity<ProveedorDTO> agregarProveedor(@RequestBody ProveedorCrearDTO proveedorCrearDTO) {
-        return ResponseEntity.ok(proveedorService.createProveedor(proveedorCrearDTO));
+    public ResponseEntity<ProveedorDTO> agregarProveedor(@Valid @RequestBody ProveedorCrearDTO proveedorCrearDTO) {
+        ProveedorDTO nuevoProveedor = proveedorService.createProveedor(proveedorCrearDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nuevoProveedor);
     }
 
+    // Solo ADMINISTRADOR puede ver la lista de proveedores
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @GetMapping
     public ResponseEntity<List<ProveedorDTO>> consultarProveedores() {
-        return ResponseEntity.ok(proveedorService.getAllProveedores());
+        List<ProveedorDTO> proveedores = proveedorService.getAllProveedores();
+        return ResponseEntity.ok(proveedores);
     }
 }

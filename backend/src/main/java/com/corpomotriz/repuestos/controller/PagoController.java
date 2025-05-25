@@ -4,7 +4,7 @@ import com.corpomotriz.repuestos.dto.request.PagoRequestDTO;
 import com.corpomotriz.repuestos.dto.response.PagoResponseDTO;
 import com.corpomotriz.repuestos.service.PagoService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -15,14 +15,17 @@ import java.security.Principal;
 @RequestMapping("/pagos")
 public class PagoController {
 
-    @Autowired
-    private PagoService pagoService;
+    private final PagoService pagoService;
+
+    public PagoController(PagoService pagoService) {
+        this.pagoService = pagoService;
+    }
 
     @PreAuthorize("hasAnyRole('CLIENTE', 'ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<PagoResponseDTO> registrarPago(@Valid @RequestBody PagoRequestDTO pagoDTO, Principal principal) {
         PagoResponseDTO nuevoPago = pagoService.registrarPago(pagoDTO, principal.getName());
-        return ResponseEntity.ok(nuevoPago);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nuevoPago);
     }
 
     @PreAuthorize("hasRole('ADMINISTRADOR')")

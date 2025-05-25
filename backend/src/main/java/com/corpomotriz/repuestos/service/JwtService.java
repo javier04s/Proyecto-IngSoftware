@@ -1,23 +1,22 @@
 package com.corpomotriz.repuestos.service;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException; // Importar para manejar tokens expirados
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException; // Importar para tokens mal formados
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.UnsupportedJwtException; // Importar para tokens no soportados
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SignatureException; // Importar para errores de firma
+import io.jsonwebtoken.security.SignatureException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import jakarta.annotation.PostConstruct; // Usar jakarta.annotation si tu Spring Boot es Jakarta EE 9+ (Spring Boot 3+)
+import jakarta.annotation.PostConstruct;
 
 import java.security.Key;
 import java.util.Date;
 
 @Service
 public class JwtService {
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
 
     @Value("${jwt.secret}")
     private String secret;
@@ -29,107 +28,68 @@ public class JwtService {
 
     @PostConstruct
     public void init() {
-        // --- AGREGA ESTOS LOGS PARA DEPURACIÓN ---
-        System.out.println("DEBUG JWT Service: jwt.secret cargado: " + secret);
         if (secret == null || secret.isEmpty()) {
-            System.err.println("DEBUG JWT Service: ¡ADVERTENCIA! jwt.secret es nulo o vacío. El token fallará.");
-            throw new RuntimeException("jwt.secret no configurado correctamente en application.properties/yml.");
-        } else {
-            System.out.println("DEBUG JWT Service: Longitud del secret (Base64): " + secret.length());
+            logger.error("jwt.secret no configurado en application.properties");
+            throw new IllegalStateException("jwt.secret no configurado");
         }
-        // --- FIN LOGS DE DEPURACIÓN ---
-
         try {
             byte[] keyBytes = Decoders.BASE64.decode(secret);
             this.signingKey = Keys.hmacShaKeyFor(keyBytes);
-
-            // --- AGREGA ESTE LOG PARA VERIFICAR LA CLAVE GENERADA ---
-            System.out.println("DEBUG JWT Service: signingKey generado exitosamente. Algoritmo: " + signingKey.getAlgorithm());
-            // --- FIN LOG ---
-
+            logger.info("JwtService: Clave secreta cargada correctamente.");
         } catch (IllegalArgumentException e) {
-            System.err.println("ERROR JWT Service: No se pudo decodificar la clave secreta Base64 o longitud incorrecta: " + e.getMessage());
-            throw new RuntimeException("Error al inicializar JwtService con la clave secreta.", e);
-        } catch (Exception e) {
-            System.err.println("ERROR JWT Service: Un error inesperado ocurrió durante la inicialización de la clave: " + e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException("Error crítico al inicializar JwtService.", e);
+            logger.error("No se pudo decodificar jwt.secret (Base64 inválido o longitud incorrecta)", e);
+            throw new IllegalStateException("Error en la configuración de jwt.secret", e);
         }
     }
 
-    /**
-     * Genera un token JWT con el nombre de usuario y rol.
-     * @param username El nombre de usuario (subject del token).
-     * @param role El rol del usuario.
-     * @return El token JWT generado.
-     */
     public String generateToken(String username, String role) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expirationTime);
 
         return Jwts.builder()
                 .setSubject(username)
-                .claim("role", role) // Puedes agregar más claims si quieres
+                .claim("role", role)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(signingKey, SignatureAlgorithm.HS256) // Usa la clave Key generada
+                .signWith(signingKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    /**
-     * Obtiene el username (subject) del token.
-     * @param token El token JWT.
-     * @return El nombre de usuario.
-     */
     public String getUsernameFromToken(String token) {
         return getClaims(token).getSubject();
     }
 
-    /**
-     * Obtiene el rol del token.
-     * @param token El token JWT.
-     * @return El rol del usuario.
-     */
     public String getRoleFromToken(String token) {
-        return getClaims(token).get("role", String.class); // Obtiene el claim llamado "role"
+        return getClaims(token).get("role", String.class);
     }
 
-    /**
-     * Valida el token (firma y expiración).
-     * @param token El token JWT a validar.
-     * @return true si el token es válido y no ha expirado, false en caso contrario.
-     */
+    public Date getExpirationDateFromToken(String token) {
+        return getClaims(token).getExpiration();
+    }
+
     public boolean validateToken(String token) {
         try {
-            getClaims(token); // Al intentar obtener los claims, JJWT valida la firma y la expiración.
-            System.out.println("DEBUG JWT Service: Token " + token.substring(0, Math.min(token.length(), 20)) + "... es VÁLIDO.");
+            getClaims(token);
             return true;
         } catch (SignatureException e) {
-            System.err.println("ERROR JWT Service: Firma JWT inválida: " + e.getMessage());
+            logger.warn("Firma JWT inválida: {}", e.getMessage());
         } catch (MalformedJwtException e) {
-            System.err.println("ERROR JWT Service: Token JWT mal formado: " + e.getMessage());
+            logger.warn("Token JWT mal formado: {}", e.getMessage());
         } catch (ExpiredJwtException e) {
-            System.err.println("ERROR JWT Service: Token JWT expirado: " + e.getMessage());
+            logger.warn("Token JWT expirado: {}", e.getMessage());
         } catch (UnsupportedJwtException e) {
-            System.err.println("ERROR JWT Service: Token JWT no soportado: " + e.getMessage());
+            logger.warn("Token JWT no soportado: {}", e.getMessage());
         } catch (IllegalArgumentException e) {
-            System.err.println("ERROR JWT Service: Argumento JWT ilegal o cadena vacía: " + e.getMessage());
-        } catch (Exception e) { // Captura cualquier otra excepción inesperada
-            System.err.println("ERROR JWT Service: Error inesperado al validar token: " + e.getMessage());
-            e.printStackTrace();
+            logger.warn("Argumento JWT ilegal o cadena vacía: {}", e.getMessage());
+        } catch (Exception e) {
+            logger.error("Error inesperado al validar token JWT", e);
         }
-        System.out.println("DEBUG JWT Service: Token " + token.substring(0, Math.min(token.length(), 20)) + "... es INVÁLIDO.");
         return false;
     }
 
-    /**
-     * Extrae los claims del token.
-     * @param token El token JWT.
-     * @return Los claims (cuerpo) del token.
-     */
     private Claims getClaims(String token) {
-        return Jwts.parserBuilder() // Usa parserBuilder()
-                .setSigningKey(signingKey) // Usa la clave Key generada
+        return Jwts.parserBuilder()
+                .setSigningKey(signingKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();

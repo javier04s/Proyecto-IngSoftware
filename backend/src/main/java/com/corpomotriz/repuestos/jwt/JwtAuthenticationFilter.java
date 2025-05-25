@@ -1,6 +1,8 @@
-package com.corpomotriz.repuestos.jwt; // <--- ¡Nuevo paquete recomendado!
+package com.corpomotriz.repuestos.jwt;
 
 import com.corpomotriz.repuestos.service.JwtService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,6 +22,8 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+
     @Autowired
     private JwtService jwtService;
 
@@ -31,35 +35,38 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         try {
             String jwt = getJwtFromRequest(request);
-            System.out.println("DEBUG Filter: Token JWT extraído del request: " + (jwt != null ? jwt.substring(0, Math.min(jwt.length(), 30)) + "..." : "null"));
+            logger.debug("Token JWT extraído del request: {}", (jwt != null ? jwt.substring(0, Math.min(jwt.length(), 30)) + "..." : "null"));
 
             if (StringUtils.hasText(jwt)) {
                 boolean isValid = jwtService.validateToken(jwt);
-                System.out.println("DEBUG Filter: Token válido según JwtService.validateToken(): " + isValid);
+                logger.debug("Token válido según JwtService.validateToken(): {}", isValid);
 
                 if (isValid) {
                     String username = jwtService.getUsernameFromToken(jwt);
                     String role = jwtService.getRoleFromToken(jwt);
-                    System.out.println("DEBUG Filter: Username del token: " + username + ", Rol: " + role);
+                    logger.debug("Username del token: {}, Rol: {}", username, role);
 
                     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                    System.out.println("DEBUG Filter: UserDetails cargados: " + userDetails.getUsername() + ", Authorities: " + userDetails.getAuthorities());
+                    logger.debug("UserDetails cargados: {}, Authorities: {}", userDetails.getUsername(), userDetails.getAuthorities());
 
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                    System.out.println("DEBUG Filter: Autenticación establecida en SecurityContextHolder para el usuario: " + username);
+                    logger.debug("Autenticación establecida en SecurityContextHolder para el usuario: {}", username);
                 } else {
-                    System.out.println("DEBUG Filter: Token no válido o expirado. No se establecerá la autenticación.");
+                    logger.warn("Token no válido o expirado. No se establecerá la autenticación.");
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token JWT inválido o expirado");
+                    return; // Detener el filtro
                 }
             } else {
-                System.out.println("DEBUG Filter: No se encontró token JWT en la cabecera Authorization.");
+                logger.debug("No se encontró token JWT en la cabecera Authorization.");
             }
         } catch (Exception ex) {
-            System.err.println("ERROR Filter: Excepción al procesar token JWT: " + ex.getMessage());
-            ex.printStackTrace();
+            logger.error("Excepción al procesar token JWT: ", ex);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error interno en autenticación JWT");
+            return;
         }
 
         filterChain.doFilter(request, response);
