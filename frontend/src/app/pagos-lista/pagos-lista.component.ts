@@ -7,7 +7,6 @@ import { CommonModule, NgFor, NgIf } from '@angular/common';
 @Component({
   selector: 'app-pago-list',
   templateUrl: './pagos-lista.component.html',
-  styleUrls: ['./pagos-lista.component.css'],
   imports: [NgIf, NgFor, CommonModule]
 })
 export class PagosListaComponent implements OnInit {

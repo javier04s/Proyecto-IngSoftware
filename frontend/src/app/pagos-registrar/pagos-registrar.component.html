@@ -1,34 +1,129 @@
-<div class="container mt-4">
-  <h2>{{ tituloFormulario }}</h2>
+<div class="container p-4 shadow rounded mt-4" style="max-width: 600px; background: #f9fbff; font-family: 'Poppins', sans-serif; color: #182848;">
+  <h2 class="mb-4 text-center" style="font-weight: 800; color: #182848;">
+    {{ tituloFormulario }}
+  </h2>
 
   <form (ngSubmit)="guardarPago()">
+
+    <!-- Email usuario -->
     <div class="mb-3">
-      <label for="monto" class="form-label">Monto</label>
-      <input type="number" class="form-control" id="monto" [(ngModel)]="pago.monto" name="monto" required min="0.01" step="0.01" />
+      <label for="emailUsuario" class="form-label fw-semibold text-primary">Correo Electronico:</label>
+      <input
+        type="email"
+        id="emailUsuario"
+        [(ngModel)]="pago.emailUsuario"
+        name="emailUsuario"
+        readonly
+        class="form-control"
+        style="background-color: #e9ecef; color: #212529;"
+      />
     </div>
 
+    <!-- Método de Pago -->
     <div class="mb-3">
-      <label for="emailUsuario" class="form-label">Email Usuario</label>
-      <input type="email" class="form-control" id="emailUsuario" [(ngModel)]="pago.emailUsuario" name="emailUsuario" required />
-    </div>
-
-    <div class="mb-3">
-      <label for="metodo" class="form-label">Método de Pago</label>
-      <select class="form-select" id="metodo" [(ngModel)]="pago.metodo" name="metodo" required>
+      <label for="metodo" class="form-label fw-semibold text-primary">Método de Pago:</label>
+      <select
+        id="metodo"
+        class="form-select"
+        [(ngModel)]="pago.metodo"
+        name="metodo"
+        required
+      >
         <option value="" disabled selected>Selecciona un método</option>
-        <option *ngFor="let metodo of metodos" [value]="metodo">{{ metodo }}</option>
+        <option *ngFor="let metodo of metodos" [value]="metodo">
+          {{ metodo }}
+        </option>
       </select>
     </div>
 
+    <!-- Productos -->
     <div class="mb-3">
-      <label for="estado" class="form-label">Estado del Pago</label>
-      <select class="form-select" id="estado" [(ngModel)]="pago.estado" name="estado" required>
+      <label class="form-label fw-semibold text-primary">Productos</label>
+
+      <div *ngFor="let producto of pago.productos; let i = index" class="d-flex align-items-center mb-2">
+        <select
+          class="form-select me-2"
+          [(ngModel)]="producto.productoId"
+          name="productoId{{ i }}"
+          required
+        >
+          <option value="" disabled>Selecciona un producto</option>
+          <option *ngFor="let p of productosDisponibles" [value]="p.id">
+            {{ p.nombre }}
+          </option>
+        </select>
+
+        <input
+          type="number"
+          class="form-control me-2"
+          min="1"
+          [(ngModel)]="producto.cantidad"
+          name="cantidad{{ i }}"
+          required
+          style="width: 80px;"
+        />
+
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="eliminarProducto(i)"
+          title="Eliminar producto"
+        >
+          &times;
+        </button>
+      </div>
+
+      <button type="button" class="btn btn-primary me-2" (click)="agregarProducto()">
+        Agregar Producto
+      </button>
+
+      <button type="button" class="btn btn-success" (click)="aceptarProductos()">
+        Aceptar
+      </button>
+    </div>
+
+    <!-- Monto total -->
+    <div class="mb-3">
+      <label for="monto" class="form-label fw-semibold text-primary">Monto total:</label>
+      <input
+        type="number"
+        id="monto"
+        class="form-control"
+        [(ngModel)]="pago.monto"
+        name="monto"
+        required
+        min="0.01"
+        step="0.01"
+        readonly
+        style="background-color: #e9ecef; color: #212529;"
+      />
+    </div>
+
+    <!-- Estado del Pago -->
+    <div class="mb-3">
+      <label for="estado" class="form-label fw-semibold text-primary">Estado del Pago:</label>
+      <select
+        id="estado"
+        class="form-select"
+        [(ngModel)]="pago.estado"
+        name="estado"
+        required
+      >
         <option value="" disabled selected>Selecciona un estado</option>
-        <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
+        <option *ngFor="let estado of estados" [value]="estado">
+          {{ estado }}
+        </option>
       </select>
     </div>
 
-    <button type="submit" class="btn btn-success me-2">Guardar Pago</button>
-    <button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button>
+    <div class="d-flex justify-content-between">
+      <button type="submit" class="btn btn-success fw-bold" style="padding: 10px 20px;">
+        Guardar Pago
+      </button>
+      <button type="button" class="btn btn-secondary fw-semibold" (click)="cancelar()" style="padding: 10px 20px;">
+        Cancelar
+      </button>
+    </div>
+
   </form>
 </div>

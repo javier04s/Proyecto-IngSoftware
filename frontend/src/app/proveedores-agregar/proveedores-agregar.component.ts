@@ -22,10 +22,28 @@ export class ProveedoresAgregarComponent {
   guardarProveedor() {
   this.proveedorServicio.ObtenerProveedoresLista().subscribe({
     next: (proveedores) => {
-      const repetido = proveedores.some(p => p.nombre.toLowerCase().trim() === this.proveedor.nombre.toLowerCase().trim());
+      const nomRepetido = proveedores.some(p => p.nombre.toLowerCase().trim() === this.proveedor.nombre.toLowerCase().trim());
+      const tlfValido = /^\d{4}-\d{7}$/.test(this.proveedor.telefono);
+      const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.proveedor.email);
+      const plzValido = /^[1-12]\d*\s(días|día|mes|meses|semana|semanas)$/.test(this.proveedor.plazoEntrega);
 
-      if (repetido) {
+      if (nomRepetido) {
         alert("Ya existe un proveedor con ese nombre.");
+        return this.interfazProveedores();
+      }
+
+      if(!tlfValido){
+        alert("El número de teléfono debe tener el formato 0XXX-XXXXXXX");
+        return this.interfazProveedores();
+      }
+
+      if (!emailValido) {
+        alert("Por favor, introduce un email válido.");
+        return this.interfazProveedores();
+      }
+
+      if (!plzValido){
+        alert("Recuerda que debes ingresar un plazo válido");
         return this.interfazProveedores();
       }
 

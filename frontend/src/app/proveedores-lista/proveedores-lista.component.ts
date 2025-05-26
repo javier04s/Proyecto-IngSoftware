@@ -4,10 +4,11 @@ import { ProveedorService } from '../services/proveedor.service';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { NgFor, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-proveedor-lista',
-  templateUrl: './proveedores-lista.component.html',
+  templateUrl: './proveedores-lista.component.html'
 })
 export class ProveedorListaComponent implements OnInit, OnDestroy {
   proveedores: Proveedor[] = [];

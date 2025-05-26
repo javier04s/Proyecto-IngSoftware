@@ -47,4 +47,10 @@ export class AuthService {
       this.usuarioSubject.next(JSON.parse(usuarioJson));
     }
   }
+
+  getEmailUsuario(): string | null {
+    const usuario = this.usuarioValue;
+    return usuario ? usuario.email : null;
+  }
+
 }

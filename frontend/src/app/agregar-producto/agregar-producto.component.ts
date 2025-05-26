@@ -15,7 +15,6 @@ import { CommonModule } from '@angular/common'; // Importa CommonModule
     // Aquí podrías importar otros módulos o componentes si fueran específicos de este componente
   ],
   templateUrl: './agregar-producto.component.html',
-  styleUrls: ['./agregar-producto.component.css']
 })
 export class AgregarProductoComponent implements OnInit {
   agregarProductoForm: FormGroup;

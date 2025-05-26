@@ -1,44 +1,104 @@
-<div class="container">
-    <div class="container text-center" style="margin:30px">
-        <h2> <i class="bi bi-bag-plus"></i> Añadir proveedores</h2>
+<div class="container p-4 shadow rounded mt-4" style="max-width: 600px; background: #f9fbff; font-family: 'Poppins', sans-serif; color: #182848;">
+  <h2 class="mb-4 text-center" style="font-weight: 800; color: #182848;">
+    Añadir proveedores
+  </h2>
+
+  <form (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="nombre" class="form-label fw-semibold text-primary">Nombre del Proveedor:</label>
+      <input
+        type="text"
+        id="nombre"
+        name="nombre"
+        class="form-control"
+        placeholder="Nombre del proveedor"
+        [(ngModel)]="proveedor.nombre"
+        required
+      />
     </div>
-<form (ngSubmit)="onSubmit()">
-  <div class="mb-3" style="margin-right:90px; margin-left:90px">
-    <label for="nombre" class="form-label">Nombre del Proveedor</label>
-    <input type="text" class="form-control" id="nombre" name="nombre"
-    [(ngModel)]="proveedor.nombre">
-    <div class="form-text">(Preferiblemente idéntico al de la empresa)</div>
-  </div>
-  <div class="mb-3" style="margin-right:90px; margin-left:90px">
-    <label for="telefono" class="form-label">Teléfono</label>
-    <input type="text" class="form-control" id="telefono" name="telefono"
-    [(ngModel)]="proveedor.telefono">
-  </div>
-  <div class="mb-3" style="margin-right:90px; margin-left:90px">
-    <label for="email" class="form-label">Email</label>
-    <input type="email" class="form-control" id="email" name="email"
-    [(ngModel)]="proveedor.email">
-  </div>
-  <div class="mb-3" style="margin-right:90px; margin-left:90px">
-    <label for="localizacion" class="form-label">Localización</label>
-    <input type="text" class="form-control" id="localizacion" name="localizacion"
-    [(ngModel)]="proveedor.localizacion">
-    <div class="form-text">(Ubicación de la empresa)</div>
-  </div>
-  <div class="mb-3" style="margin-right:90px; margin-left:90px">
-    <label for="especializacion" class="form-label">Especialización</label>
-    <input type="text"  class="form-control" id="especializacion" name="especializacion"
-    [(ngModel)]="proveedor.especializacion">
-    <div class="form-text">(Gama de productos que ofrece)</div>
-  </div>
-  <div class="mb-3" style="margin-right:90px; margin-left:90px">
-    <label for="plazoEntrega" class="form-label">Plazo de Entrega</label>
-    <input type="text" class="form-control" id="plazoEntrega" name="plazoEntrega"
-    [(ngModel)]="proveedor.plazoEntrega">
-    <div class="form-text">(Tiempo de entrega. Ej: 2 días)</div>
-  </div>
-  <div class="mb-3 d-flex justify-content-between" style="margin-right:90px; margin-left:90px">
-    <button type="submit" class="btn btn-outline-success" style="background-color: #022407; width: 140px; padding: 10px; margin-left:280px" >Confirmar</button>
-    <button type="button" class="btn btn-outline-danger" (click)="interfazProveedores()" style="background-color: #290202; width: 140px; padding: 10px; margin-right: 280px;">Cancelar</button>
-  </div>
+
+    <div class="mb-3">
+      <label for="telefono" class="form-label fw-semibold text-primary">Teléfono:</label>
+      <input
+        type="tel"
+        id="telefono"
+        name="telefono"
+        class="form-control"
+        pattern="\d{4}-\d{7}"
+        placeholder="0414-1533857"
+        [(ngModel)]="proveedor.telefono"
+        required
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="email" class="form-label fw-semibold text-primary">Email:</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        class="form-control"
+        placeholder="Correo electrónico"
+        [(ngModel)]="proveedor.email"
+        required
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="localizacion" class="form-label fw-semibold text-primary">Localización:</label>
+      <input
+        type="text"
+        id="localizacion"
+        name="localizacion"
+        class="form-control"
+        placeholder="Ubicación del proveedor/empresa"
+        [(ngModel)]="proveedor.localizacion"
+        required
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="especializacion" class="form-label fw-semibold text-primary">Especialización:</label>
+      <select
+        id="especializacion"
+        name="especializacion"
+        class="form-control"
+        [(ngModel)]="proveedor.especializacion"
+        required
+      >
+        <option value="" selected>(No especificada)</option>
+        <option>Componentes mecánicos</option>
+        <option>Componentes eléctricos</option>
+        <option>Componentes de carrocería</option>
+        <option>Otros</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="plazoEntrega" class="form-label fw-semibold text-primary">Plazo de Entrega:</label>
+      <input
+        type="text"
+        id="plazoEntrega"
+        name="plazoEntrega"
+        class="form-control"
+        placeholder="Ej: 2 días / 4 meses / 1 semana"
+        [(ngModel)]="proveedor.plazoEntrega"
+        required
+      />
+    </div>
+
+    <div class="d-flex justify-content-between">
+      <button type="submit" class="btn btn-success fw-bold" style="padding: 10px 20px;">
+        Confirmar
+      </button>
+      <button
+        type="button"
+        class="btn btn-secondary fw-semibold"
+        (click)="interfazProveedores()"
+        style="padding: 10px 20px;"
+      >
+        Cancelar
+      </button>
+    </div>
   </form>
+</div>
