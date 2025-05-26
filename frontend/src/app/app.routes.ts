@@ -14,7 +14,7 @@ import { RoleGuard } from './guard/role.guard';
 
 export const routes: Routes = [
   { path: 'productos', component: ProductoListaComponent },
-  { path: 'productos/nuevos', component: AgregarProductoComponent, canActivate: [RoleGuard] },
+  { path: 'productos/nuevos', component: AgregarProductoComponent, canActivate: [RoleGuard], data: { roles: ['ADMINISTRADOR'] } },
   { path: '', redirectTo: 'productos', pathMatch: 'full' },
   { path: 'productos/:id', component: ProductoDetalleComponent },
   { path: 'registro', component: RegistroComponent },
@@ -22,9 +22,9 @@ export const routes: Routes = [
   { path: 'perfil', component: PerfilComponent },
   { path: 'pagos', component: PagosListaComponent, canActivate: [RoleGuard], data: { roles: ['CLIENTE', 'ADMINISTRADOR'] } },
   { path: 'pagos/crear', component: PagosRegistrarComponent, canActivate: [RoleGuard], data: { roles: ['CLIENTE', 'ADMINISTRADOR'] } },
-  { path: 'pagos/editar/:id', component: PagosRegistrarComponent, canActivate: [RoleGuard] },
-  { path: 'pagos/:id', component: PagosRegistrarComponent, canActivate: [RoleGuard] },
-  { path: 'usuarios/registrados', component: ListaUsuariosComponent, canActivate: [RoleGuard] },
-  { path: 'proveedores', component: ProveedorListaComponent, canActivate: [RoleGuard] },
-  { path: 'proveedores/agregar', component: ProveedoresAgregarComponent, canActivate: [RoleGuard] },
+  { path: 'pagos/editar/:id', component: PagosRegistrarComponent, canActivate: [RoleGuard], data: { roles: ['ADMINISTRADOR'] } },
+  { path: 'pagos/:id', component: PagosRegistrarComponent, canActivate: [RoleGuard], data: { roles: ['CLIENTE', 'ADMINISTRADOR'] } },
+  { path: 'usuarios/registrados', component: ListaUsuariosComponent, canActivate: [RoleGuard], data: { roles: ['ADMINISTRADOR'] } },
+  { path: 'proveedores', component: ProveedorListaComponent, canActivate: [RoleGuard], data: { roles: ['ADMINISTRADOR'] }},
+  { path: 'proveedores/agregar', component: ProveedoresAgregarComponent, canActivate: [RoleGuard], data: { roles: ['ADMINISTRADOR'] } },
 ];
