@@ -39,7 +39,8 @@ public class AuthController {
                 "usuario", Map.of(
                         "id", usuario.getId(),
                         "nombre", usuario.getNombre(),
-                        "email", usuario.getEmail()
+                        "email", usuario.getEmail(),
+                        "rol", usuario.getRol()
                 )
         ));
     }

@@ -37,7 +37,8 @@ public class UsuarioService {
         Usuario usuario = Usuario.builder()
                 .nombre(dto.getNombre())
                 .email(dto.getEmail())
-                .contrasena(dto.getContrasena())  // sin encriptar (no recomendado)
+                .contrasena(dto.getContrasena())
+                .rol(dto.getRol())
                 .fechaCreacion(LocalDateTime.now())
                 .build();
 
@@ -49,6 +50,7 @@ public class UsuarioService {
                 .id(usuario.getId().intValue())
                 .nombre(usuario.getNombre())
                 .email(usuario.getEmail())
+                .rol(usuario.getRol())
                 .fechaCreacion(usuario.getFechaCreacion())
                 .build();
     }
