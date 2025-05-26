@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PagoResponse, PagoRequest } from '../pagos';
+import { PagoResponse, PagoRequest } from '../model/pagos';
 
 @Injectable({
   providedIn: 'root'

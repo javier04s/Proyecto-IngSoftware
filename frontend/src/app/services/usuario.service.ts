@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { UsuarioCrearDTO } from '../usuario';
+import { UsuarioCrearDTO } from '../model/usuario';
 
 export interface Usuario {
   id: number;
   nombre: string;
   email: string;
   fechaCreacion: string;
+  rol: string;
 }
 
 export interface LoginResponse {

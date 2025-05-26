@@ -5,6 +5,7 @@ export interface Usuario {
   id: number;
   nombre: string;
   email: string;
+  rol: string;
 }
 
 @Injectable({
@@ -27,11 +28,6 @@ export class AuthService {
     return this.usuarioSubject.value;
   }
 
-  login(usuario: Usuario) {
-    localStorage.setItem('usuario', JSON.stringify(usuario));
-    this.usuarioSubject.next(usuario);
-  }
-
   logout() {
     localStorage.removeItem('usuario');
     this.usuarioSubject.next(null);
@@ -51,6 +47,11 @@ export class AuthService {
   getEmailUsuario(): string | null {
     const usuario = this.usuarioValue;
     return usuario ? usuario.email : null;
+  }
+
+  getRol(): string | null {
+    const usuario = this.usuarioValue;
+    return usuario ? usuario.rol : null;
   }
 
 }

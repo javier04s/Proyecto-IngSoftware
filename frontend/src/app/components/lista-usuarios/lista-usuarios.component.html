@@ -1,0 +1,30 @@
+<div class="container text-center mx-auto" style="margin-top: 50px; max-width: 900px;">
+  <h3 class="mb-4">Usuarios Registrados</h3>
+
+  <div *ngIf="error" class="alert alert-danger text-start" style="max-width: 600px; margin: 0 auto;">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!error && usuariosRegistrados.length > 0" class="table-responsive" style="max-width: 900px; margin: 0 auto;">
+    <table class="table table-striped table-hover align-middle text-center">
+      <thead class="table-primary" style="font-weight: 600;">
+        <tr>
+          <th>Nombre</th>
+          <th>Correo</th>
+          <th>Rol</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of usuariosRegistrados">
+          <td>{{ user.nombre }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.rol }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!error && usuariosRegistrados.length === 0" class="text-center mt-4" style="color: #6c757d;">
+    No hay usuarios registrados.
+  </div>
+</div>

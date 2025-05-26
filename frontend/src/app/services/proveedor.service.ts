@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Proveedor } from '../proveedor';
+import { Proveedor } from '../model/proveedor';
 
 @Injectable({
   providedIn: 'root'
@@ -15,12 +15,8 @@ export class ProveedorService {
     return this.clienteHttp.get<Proveedor[]>(this.urlBase);
   }
 
-  /*crearProveedor(proveedor: Proveedor): Observable<Proveedor> {
-    return this.clienteHttp.post<Proveedor>(`${this.urlBase}`, proveedor);
-  }*/
-
-  AgregarProveedor(proveedor: Proveedor){
-    return this.clienteHttp.post(this.urlBase,proveedor);
+  AgregarProveedor(proveedor: Proveedor) {
+    return this.clienteHttp.post(this.urlBase, proveedor);
   }
 
   constructor() { }
