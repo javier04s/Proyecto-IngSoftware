@@ -1,11 +1,13 @@
 package com.corpomotriz.repuestos.dto.response;
 
+import com.corpomotriz.repuestos.dto.PagoProductoDTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,4 +20,6 @@ public class PagoResponseDTO {
     private String metodo;
     private String estado;
     private LocalDate fechaPago;
+
+    private List<PagoProductoDTO> productos;
 }

@@ -7,6 +7,8 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "pago", schema = "repuestos_db")
@@ -41,6 +43,9 @@ public class Pago {
 
     @Column(name = "fecha_creacion", updatable = false)
     private LocalDateTime fechaCreacion;
+
+    @OneToMany(mappedBy = "pago", cascade = CascadeType.ALL)
+    private List<PagoProducto> pagoProductos = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {

@@ -1,5 +1,6 @@
 package com.corpomotriz.repuestos.dto.request;
 
+import com.corpomotriz.repuestos.dto.PagoProductoDTO;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,6 +8,7 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,6 +28,8 @@ public class PagoRequestDTO {
     @NotBlank(message = "El email del usuario es obligatorio")
     @Email(message = "Formato de email inválido")
     private String emailUsuario;
+
+    private List<PagoProductoDTO> productos;
 
 }
 

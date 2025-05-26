@@ -1,13 +1,19 @@
 package com.corpomotriz.repuestos.service;
 
+import com.corpomotriz.repuestos.dto.PagoProductoDTO;
 import com.corpomotriz.repuestos.dto.request.PagoRequestDTO;
 import com.corpomotriz.repuestos.dto.response.PagoResponseDTO;
 import com.corpomotriz.repuestos.model.Pago;
+import com.corpomotriz.repuestos.model.PagoProducto;
+import com.corpomotriz.repuestos.model.Producto;
 import com.corpomotriz.repuestos.model.Usuario;
+import com.corpomotriz.repuestos.repository.PagoProductoRepository;
 import com.corpomotriz.repuestos.repository.PagoRepository;
+import com.corpomotriz.repuestos.repository.ProductoRepository;
 import com.corpomotriz.repuestos.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,7 +26,10 @@ public class PagoService {
 
     private final PagoRepository pagoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final ProductoRepository productoRepository;
+    private final PagoProductoRepository pagoProductoRepository;
 
+    @Transactional
     public PagoResponseDTO registrarPago(PagoRequestDTO pagoDTO) {
         Usuario usuario = usuarioRepository.findByEmail(pagoDTO.getEmailUsuario())
                 .orElseThrow(() -> new RuntimeException("Usuario con email '" + pagoDTO.getEmailUsuario() + "' no encontrado."));
@@ -35,9 +44,33 @@ public class PagoService {
 
         Pago pagoGuardado = pagoRepository.save(pago);
 
+        // Procesar productos vinculados
+        for (PagoProductoDTO productoDTO : pagoDTO.getProductos()) {
+            Producto producto = productoRepository.findById(productoDTO.getProductoId())
+                    .orElseThrow(() -> new RuntimeException("Producto con ID " + productoDTO.getProductoId() + " no encontrado"));
+
+            // Verificar stock suficiente
+            if (producto.getCantidad() < productoDTO.getCantidad()) {
+                throw new RuntimeException("Stock insuficiente para producto ID " + producto.getId());
+            }
+
+            // Crear entidad PagoProducto y guardar
+            PagoProducto pagoProducto = PagoProducto.builder()
+                    .pago(pagoGuardado)
+                    .producto(producto)
+                    .cantidad(productoDTO.getCantidad())
+                    .build();
+            pagoProductoRepository.save(pagoProducto);
+
+            // Actualizar stock del producto
+            producto.setCantidad(producto.getCantidad() - productoDTO.getCantidad());
+            productoRepository.save(producto);
+        }
+
         return mapToResponseDTO(pagoGuardado);
     }
 
+    @Transactional
     public PagoResponseDTO modificarPago(Integer id, PagoRequestDTO pagoDTO) {
         Pago pago = pagoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pago no encontrado"));
@@ -46,12 +79,13 @@ public class PagoService {
         pago.setMonto(pagoDTO.getMonto());
         pago.setEstado(pagoDTO.getEstado());
 
-        // Si quieres actualizar el usuario también, deberías buscarlo aquí.
         if (pagoDTO.getEmailUsuario() != null && !pagoDTO.getEmailUsuario().isBlank()) {
             Usuario usuario = usuarioRepository.findByEmail(pagoDTO.getEmailUsuario())
                     .orElseThrow(() -> new RuntimeException("Usuario con email '" + pagoDTO.getEmailUsuario() + "' no encontrado."));
             pago.setUsuario(usuario);
         }
+
+        // Si quieres actualizar productos relacionados también, deberías implementar lógica aquí (recomiendo hacerlo aparte).
 
         Pago pagoActualizado = pagoRepository.save(pago);
         return mapToResponseDTO(pagoActualizado);
@@ -69,6 +103,16 @@ public class PagoService {
     }
 
     private PagoResponseDTO mapToResponseDTO(Pago pago) {
+        List<PagoProductoDTO> productos = pago.getPagoProductos() == null ?
+                List.of() :
+                pago.getPagoProductos().stream()
+                        .map(pp -> PagoProductoDTO.builder()
+                                .productoId(Math.toIntExact(pp.getProducto().getId()))
+                                .nombreProducto(pp.getProducto().getNombre()) // si tienes este campo en el DTO
+                                .cantidad(pp.getCantidad())
+                                .build())
+                        .collect(Collectors.toList());
+
         return PagoResponseDTO.builder()
                 .id(pago.getId())
                 .emailUsuario(pago.getUsuario().getEmail())
@@ -76,6 +120,8 @@ public class PagoService {
                 .metodo(pago.getMetodo())
                 .estado(pago.getEstado())
                 .fechaPago(pago.getFechaPago())
+                .productos(productos)
                 .build();
     }
+
 }
