@@ -15,8 +15,12 @@ export class ProveedorService {
     return this.clienteHttp.get<Proveedor[]>(this.urlBase);
   }
 
-  crearProveedor(proveedor: Proveedor): Observable<Proveedor> {
+  /*crearProveedor(proveedor: Proveedor): Observable<Proveedor> {
     return this.clienteHttp.post<Proveedor>(`${this.urlBase}`, proveedor);
+  }*/
+
+  AgregarProveedor(proveedor: Proveedor){
+    return this.clienteHttp.post(this.urlBase,proveedor);
   }
 
   constructor() { }
