@@ -4,14 +4,18 @@
   <form (ngSubmit)="guardarPago()">
     <div class="mb-3">
       <label for="monto" class="form-label">Monto</label>
-      <input type="number" class="form-control" id="monto" [(ngModel)]="pago.monto" name="monto" required min="0.01"
-        step="0.01" />
+      <input type="number" class="form-control" id="monto" [(ngModel)]="pago.monto" name="monto" required min="0.01" step="0.01" />
+    </div>
+
+    <div class="mb-3">
+      <label for="emailUsuario" class="form-label">Email Usuario</label>
+      <input type="email" class="form-control" id="emailUsuario" [(ngModel)]="pago.emailUsuario" name="emailUsuario" required />
     </div>
 
     <div class="mb-3">
       <label for="metodo" class="form-label">Método de Pago</label>
       <select class="form-select" id="metodo" [(ngModel)]="pago.metodo" name="metodo" required>
-        <option selected>Selecciona un método</option>
+        <option value="" disabled selected>Selecciona un método</option>
         <option *ngFor="let metodo of metodos" [value]="metodo">{{ metodo }}</option>
       </select>
     </div>
@@ -19,7 +23,7 @@
     <div class="mb-3">
       <label for="estado" class="form-label">Estado del Pago</label>
       <select class="form-select" id="estado" [(ngModel)]="pago.estado" name="estado" required>
-        <option selected>Selecciona un estado</option>
+        <option value="" disabled selected>Selecciona un estado</option>
         <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
       </select>
     </div>

@@ -1,4 +1,5 @@
 export class PagoRequest {
+  emailUsuario: string;
   monto: number;
   metodo: string;
   estado: string;
