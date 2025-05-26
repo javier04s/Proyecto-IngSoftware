@@ -24,7 +24,7 @@ public class PagoController {
 
     @PostMapping
     public ResponseEntity<PagoResponseDTO> registrarPago(@Valid @RequestBody PagoRequestDTO pagoDTO) {
-        PagoResponseDTO nuevoPago = pagoService.registrarPago(pagoDTO, null);
+        PagoResponseDTO nuevoPago = pagoService.registrarPago(pagoDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoPago);
     }
 

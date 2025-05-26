@@ -6,7 +6,7 @@ import com.corpomotriz.repuestos.model.Pago;
 import com.corpomotriz.repuestos.model.Usuario;
 import com.corpomotriz.repuestos.repository.PagoRepository;
 import com.corpomotriz.repuestos.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -15,26 +15,22 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PagoService {
 
-    @Autowired
-    private PagoRepository pagoRepository;
+    private final PagoRepository pagoRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-
-    public PagoResponseDTO registrarPago(PagoRequestDTO pagoDTO, String emailUsuario) {
-        Usuario usuario = usuarioRepository.findByEmail(emailUsuario)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    public PagoResponseDTO registrarPago(PagoRequestDTO pagoDTO) {
+        Usuario usuario = usuarioRepository.findByEmail(pagoDTO.getEmailUsuario())
+                .orElseThrow(() -> new RuntimeException("Usuario con email '" + pagoDTO.getEmailUsuario() + "' no encontrado."));
 
         Pago pago = Pago.builder()
                 .monto(pagoDTO.getMonto())
                 .metodo(pagoDTO.getMetodo())
                 .estado(pagoDTO.getEstado())
-                // Fecha de pago automática, ignorando la del DTO
                 .fechaPago(LocalDate.now())
                 .usuario(usuario)
-                .fechaCreacion(java.time.LocalDateTime.now())
                 .build();
 
         Pago pagoGuardado = pagoRepository.save(pago);
@@ -49,6 +45,13 @@ public class PagoService {
         pago.setMetodo(pagoDTO.getMetodo());
         pago.setMonto(pagoDTO.getMonto());
         pago.setEstado(pagoDTO.getEstado());
+
+        // Si quieres actualizar el usuario también, deberías buscarlo aquí.
+        if (pagoDTO.getEmailUsuario() != null && !pagoDTO.getEmailUsuario().isBlank()) {
+            Usuario usuario = usuarioRepository.findByEmail(pagoDTO.getEmailUsuario())
+                    .orElseThrow(() -> new RuntimeException("Usuario con email '" + pagoDTO.getEmailUsuario() + "' no encontrado."));
+            pago.setUsuario(usuario);
+        }
 
         Pago pagoActualizado = pagoRepository.save(pago);
         return mapToResponseDTO(pagoActualizado);
@@ -65,15 +68,14 @@ public class PagoService {
                 .map(this::mapToResponseDTO);
     }
 
-
     private PagoResponseDTO mapToResponseDTO(Pago pago) {
-        PagoResponseDTO dto = new PagoResponseDTO();
-        dto.setId(pago.getId());
-        dto.setEmailUsuario(pago.getUsuario().getEmail());
-        dto.setMonto(pago.getMonto());
-        dto.setMetodo(pago.getMetodo());
-        dto.setEstado(pago.getEstado());
-        dto.setFechaPago(pago.getFechaPago());
-        return dto;
+        return PagoResponseDTO.builder()
+                .id(pago.getId())
+                .emailUsuario(pago.getUsuario().getEmail())
+                .monto(pago.getMonto())
+                .metodo(pago.getMetodo())
+                .estado(pago.getEstado())
+                .fechaPago(pago.getFechaPago())
+                .build();
     }
 }

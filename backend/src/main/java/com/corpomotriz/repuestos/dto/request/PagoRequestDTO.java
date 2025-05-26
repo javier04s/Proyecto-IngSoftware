@@ -23,5 +23,9 @@ public class PagoRequestDTO {
     @NotBlank(message = "El estado es obligatorio")
     private String estado;
 
+    @NotBlank(message = "El email del usuario es obligatorio")
+    @Email(message = "Formato de email inválido")
+    private String emailUsuario;
+
 }
 
