@@ -100,5 +100,55 @@
         Cancelar
       </button>
     </div>
+<<<<<<< HEAD
   </form>
 </div>
+=======
+<form (ngSubmit)="onSubmit()">
+  <div class="mb-3" style="margin-right:90px; margin-left:90px">
+    <label for="nombre" class="form-label">Nombre del Proveedor</label>
+    <input type="text" class="form-control" id="nombre" name="nombre"
+    [(ngModel)]="proveedor.nombre">
+    <div class="form-text">(Preferiblemente idéntico al de la empresa)</div>
+  </div>
+  <div class="mb-3" style="margin-right:90px; margin-left:90px">
+    <label for="telefono" class="form-label">Teléfono</label>
+    <input type="tel" class="form-control" id="telefono" name="telefono" pattern="\d{4}-\d{7}"
+    [(ngModel)]="proveedor.telefono">
+    <div class="form-text">(Número telefónico. Ej: 0414-1533857)</div>
+  </div>
+  <div class="mb-3" style="margin-right:90px; margin-left:90px">
+    <label for="email" class="form-label">Email</label>
+    <input type="email" class="form-control" id="email" name="email"
+    [(ngModel)]="proveedor.email">
+    <div class="form-text">(Correo electrónico afiliado al proveedor/empresa)</div>
+  </div>
+  <div class="mb-3" style="margin-right:90px; margin-left:90px">
+    <label for="localizacion" class="form-label">Localización</label>
+    <input type="text" class="form-control" id="localizacion" name="localizacion"
+    [(ngModel)]="proveedor.localizacion">
+    <div class="form-text">(Ubicación del proveedor/empresa)</div>
+  </div>
+  <div class="mb-3" style="margin-right:90px; margin-left:90px">
+    <label for="especializacion" class="form-label">Especialización</label>
+    <select id="especializacion" class= "form-control" name="especializacion" [(ngModel)]="proveedor.especializacion">
+      <option value="" selected>(No especificada)</option>
+      <option>Componentes mecánicos</option>
+      <option>Componentes eléctricos</option>
+      <option>Componentes de carrocería</option>
+      <option>Otros</option>
+    </select>
+    <div class="form-text">(Gama de productos que ofrece)</div>
+  </div>
+  <div class="mb-3" style="margin-right:90px; margin-left:90px">
+    <label for="plazoEntrega" class="form-label">Plazo de Entrega</label>
+    <input type="text" class="form-control" id="plazoEntrega" name="plazoEntrega"
+    [(ngModel)]="proveedor.plazoEntrega">
+    <div class="form-text">(Tiempo de entrega. Ej: 2 días/4 meses/1 semana)</div>
+  </div>
+  <div class="mb-3 d-flex justify-content-between" style="margin-right:90px; margin-left:90px">
+    <button type="submit" class="btn btn-outline-success" style="background-color: #022407; width: 140px; padding: 10px; margin-left:280px" >Confirmar</button>
+    <button type="button" class="btn btn-outline-danger" (click)="interfazProveedores()" style="background-color: #290202; width: 140px; padding: 10px; margin-right: 280px;">Cancelar</button>
+  </div>
+  </form>
+>>>>>>> ce1aaff72ccad4985a55daa8fe66b65860a857ea
