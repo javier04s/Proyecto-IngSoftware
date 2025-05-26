@@ -1,0 +1,30 @@
+<div class="container mt-4">
+  <h2>{{ tituloFormulario }}</h2>
+
+  <form (ngSubmit)="guardarPago()">
+    <div class="mb-3">
+      <label for="monto" class="form-label">Monto</label>
+      <input type="number" class="form-control" id="monto" [(ngModel)]="pago.monto" name="monto" required min="0.01"
+        step="0.01" />
+    </div>
+
+    <div class="mb-3">
+      <label for="metodo" class="form-label">Método de Pago</label>
+      <select class="form-select" id="metodo" [(ngModel)]="pago.metodo" name="metodo" required>
+        <option selected>Selecciona un método</option>
+        <option *ngFor="let metodo of metodos" [value]="metodo">{{ metodo }}</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="estado" class="form-label">Estado del Pago</label>
+      <select class="form-select" id="estado" [(ngModel)]="pago.estado" name="estado" required>
+        <option selected>Selecciona un estado</option>
+        <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-success me-2">Guardar Pago</button>
+    <button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button>
+  </form>
+</div>

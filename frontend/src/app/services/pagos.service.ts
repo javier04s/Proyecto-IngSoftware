@@ -23,4 +23,8 @@ export class PagosService {
     return this.clienteHttp.get<PagoResponse>(`${this.urlBase}/${id}`);
   }
 
+  actualizarPago(id: number, pago: PagoRequest): Observable<PagoResponse> {
+    return this.clienteHttp.put<PagoResponse>(`${this.urlBase}/${id}`, pago);
+  }
+
 }

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Producto, ProductoCrearDTO } from '../producto';
-import { Proveedor } from '../proveedor'; 
+import { Proveedor } from '../proveedor';
 
 @Injectable({
   providedIn: 'root'
@@ -27,4 +27,4 @@ export class ProductoService {
   obtenerProveedores(): Observable<Proveedor[]> {
     return this.clienteHttp.get<Proveedor[]>('http://localhost:8080/proveedores');
   }
-  }
+}
