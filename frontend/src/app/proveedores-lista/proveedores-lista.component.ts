@@ -19,7 +19,7 @@ export class ProveedorListaComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.usuarioSub = this.authService.usuario$.subscribe(usuario => {
-      if (usuario && usuario.token) {
+      if (usuario) {
         console.log("ProveedorListaComponent: Usuario autenticado");
 
         // Recarga la lista solo una vez después de 1 segundo
@@ -28,11 +28,9 @@ export class ProveedorListaComponent implements OnInit, OnDestroy {
       } else {
         console.warn("ProveedorListaComponent: Usuario no autenticado");
         this.proveedores = [];
-
       }
     });
   }
-
 
   ngOnDestroy() {
     this.usuarioSub?.unsubscribe();

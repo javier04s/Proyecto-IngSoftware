@@ -23,7 +23,6 @@ export class ProductoDetalleComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
     this.usuarioService.usuario$.subscribe(usuario => this.usuario = usuario);
 
     const id = this.route.snapshot.paramMap.get('id');
@@ -54,11 +53,10 @@ export class ProductoDetalleComponent implements OnInit {
   }
 
   registrarPago(): void {
-  if (!this.usuario || this.usuario.rol === 'VISITANTE') {
-    this.router.navigate(['/iniciar-sesion']);
-  } else {
-    this.router.navigate(['/pagos']);
+    if (!this.usuario) {
+      this.router.navigate(['/iniciar-sesion']);
+    } else {
+      this.router.navigate(['/pagos']);
+    }
   }
-}
-
 }

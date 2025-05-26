@@ -11,14 +11,12 @@
         <tr>
           <th>Nombre</th>
           <th>Correo</th>
-          <th>Rol</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let user of usuariosRegistrados">
           <td>{{ user.nombre }}</td>
           <td>{{ user.email }}</td>
-          <td>{{ user.rol }}</td>
         </tr>
       </tbody>
     </table>

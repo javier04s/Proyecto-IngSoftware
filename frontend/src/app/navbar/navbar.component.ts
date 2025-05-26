@@ -11,7 +11,7 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
 
-  rolUsuario: string = 'Visitante';
+  estaAutenticado: boolean = false;
 
   constructor(
     private usuarioService: UsuarioService,
@@ -19,14 +19,15 @@ export class NavbarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Suscripción para actualizar estado de autenticación según el usuario actual
     this.usuarioService.usuario$.subscribe(usuario => {
-      this.rolUsuario = usuario ? usuario.rol : 'Visitante';
+      this.estaAutenticado = usuario !== null;
     });
   }
 
   cerrarSesion(): void {
     this.usuarioService.logout();
-    this.rolUsuario = 'Visitante';
+    this.estaAutenticado = false;
     this.router.navigate(['/']);
   }
 }

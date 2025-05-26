@@ -44,10 +44,14 @@ export class LoginComponent implements OnInit {
 
     this.usuarioService.login(email, contrasena).subscribe({
       next: (response) => {
-        this.usuarioService.setUsuario(response.usuario, response.token);
+        // Extraemos el usuario del response
+        const usuario = response.usuario;
+
+        // Guardamos el usuario en el servicio (sin token)
+        this.usuarioService.setUsuario(usuario);
+
         this.isLoading = false;
 
-        // ✅ Recargar la página tras 1 segundo
         setTimeout(() => {
           window.location.reload();
         }, 1000);

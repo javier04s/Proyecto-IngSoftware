@@ -9,7 +9,7 @@
     </div>
 
     <ng-container *ngIf="usuario$ | async as usuario">
-      <div *ngIf="usuario?.rol === 'ADMINISTRADOR'">
+      <div>
         <button class="btn btn-outline-primary d-flex align-items-center" (click)="interfazAggProducto()">
           <i class="bi bi-plus-circle me-2"></i> Insertar Producto
         </button>

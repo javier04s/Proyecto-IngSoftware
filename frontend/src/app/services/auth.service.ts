@@ -5,8 +5,6 @@ export interface Usuario {
   id: number;
   nombre: string;
   email: string;
-  rol: string;
-  token: string;
 }
 
 @Injectable({
@@ -18,7 +16,6 @@ export class AuthService {
   public usuario$: Observable<Usuario | null>;
 
   constructor() {
-    // Carga inicial automática desde localStorage
     const usuarioJson = localStorage.getItem('usuario');
     this.usuarioSubject = new BehaviorSubject<Usuario | null>(
       usuarioJson ? JSON.parse(usuarioJson) : null
@@ -30,15 +27,9 @@ export class AuthService {
     return this.usuarioSubject.value;
   }
 
-  /**
-   * Guarda el usuario y token en el BehaviorSubject y localStorage.
-   * @param usuario Objeto usuario (sin token)
-   * @param token Token JWT
-   */
-  login(usuario: Omit<Usuario, 'token'>, token: string) {
-    const usuarioConToken: Usuario = { ...usuario, token };
-    localStorage.setItem('usuario', JSON.stringify(usuarioConToken));
-    this.usuarioSubject.next(usuarioConToken);
+  login(usuario: Usuario) {
+    localStorage.setItem('usuario', JSON.stringify(usuario));
+    this.usuarioSubject.next(usuario);
   }
 
   logout() {
@@ -47,13 +38,9 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return !!this.usuarioValue?.token;
+    return !!this.usuarioValue;
   }
 
-
-  /**
-   * Recarga el usuario almacenado en localStorage (útil para APP_INITIALIZER)
-   */
   cargarUsuarioDesdeStorage(): void {
     const usuarioJson = localStorage.getItem('usuario');
     if (usuarioJson) {

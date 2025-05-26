@@ -7,15 +7,12 @@ export interface Usuario {
   id: number;
   nombre: string;
   email: string;
-  rol: string;
   fechaCreacion: string;
-  token?: string;
 }
 
 export interface LoginResponse {
   message: string;
   usuario: Usuario;
-  token: string;
 }
 
 @Injectable({
@@ -47,22 +44,9 @@ export class UsuarioService {
     );
   }
 
-  setUsuario(usuario: Usuario, token: string): void {
-  const usuarioConToken = { ...usuario, token };
-  this.usuarioSubject.next(usuarioConToken);
-  localStorage.setItem('usuario', JSON.stringify(usuarioConToken));
-}
-
-
-  getToken(): string | null {
-    const usuarioString = localStorage.getItem('usuario');
-    if (!usuarioString) return null;
-    const usuario = JSON.parse(usuarioString);
-    return usuario.token || null;
-  }
-
-  isAuthenticated(): boolean {
-    return !!this.getToken();
+  setUsuario(usuario: Usuario): void {
+    this.usuarioSubject.next(usuario);
+    localStorage.setItem('usuario', JSON.stringify(usuario));
   }
 
   clearUsuario(): void {
@@ -74,19 +58,22 @@ export class UsuarioService {
     return this.usuarioSubject.value;
   }
 
-  getAllUsuarios(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
-  }
-
-  getUsuarioLogueado(): Observable<Usuario> {
-    return this.http.get<Usuario>(this.apiUrl);
-  }
-
   logout(): void {
     this.clearUsuario();
   }
 
+  getAllUsuarios(): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(this.apiUrl);
+  }
+
   getUsuarioPorId(id: number): Observable<Usuario> {
     return this.http.get<Usuario>(`${this.apiUrl}/${id}`);
+  }
+
+  cargarUsuarioDesdeStorage(): void {
+    const usuarioString = localStorage.getItem('usuario');
+    if (usuarioString) {
+      this.usuarioSubject.next(JSON.parse(usuarioString));
+    }
   }
 }
