@@ -5,12 +5,11 @@ import com.corpomotriz.repuestos.dto.PedidoDTO;
 import com.corpomotriz.repuestos.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/pedidos")
 public class PedidoController {
@@ -18,24 +17,19 @@ public class PedidoController {
     @Autowired
     private PedidoService pedidoService;
 
-    // Crear pedido (CLIENTE)
-    @PreAuthorize("hasAuthority('CLIENTE')")
     @PostMapping
-    public ResponseEntity<PedidoDTO> crearPedido(@RequestBody PedidoCrearDTO pedidoCrearDTO, Principal principal) {
-        PedidoDTO nuevoPedido = pedidoService.createPedido(pedidoCrearDTO, principal.getName());
+    public ResponseEntity<PedidoDTO> crearPedido(@RequestBody PedidoCrearDTO pedidoCrearDTO) {
+        PedidoDTO nuevoPedido = pedidoService.createPedido(pedidoCrearDTO, null);
         return ResponseEntity.ok(nuevoPedido);
     }
 
-    // Consultar pedidos del usuario autenticado (CLIENTE y ADMINISTRADOR)
-    @PreAuthorize("hasAnyAuthority('CLIENTE', 'ADMINISTRADOR')")
     @GetMapping("/mis-pedidos")
-    public ResponseEntity<List<PedidoDTO>> getPedidosUsuario(Principal principal) {
-        List<PedidoDTO> pedidos = pedidoService.getPedidosPorUsuario(principal.getName());
+    public ResponseEntity<List<PedidoDTO>> getPedidosUsuario() {
+        List<PedidoDTO> pedidos = pedidoService.getPedidosPorUsuario(null);
         return ResponseEntity.ok(pedidos);
     }
 
-    // Consultar pedido por ID (ADMINISTRADOR)
-    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    // Consultar pedido por ID (antes ADMINISTRADOR)
     @GetMapping("/{id}")
     public ResponseEntity<PedidoDTO> getPedidoById(@PathVariable Integer id) {
         return pedidoService.getPedidoById(id)
@@ -43,8 +37,7 @@ public class PedidoController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Actualizar pedido (ADMINISTRADOR)
-    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    // Actualizar pedido (antes ADMINISTRADOR)
     @PutMapping("/{id}")
     public ResponseEntity<PedidoDTO> updatePedido(@PathVariable Integer id, @RequestBody PedidoCrearDTO pedidoCrearDTO) {
         try {
@@ -55,8 +48,7 @@ public class PedidoController {
         }
     }
 
-    // Eliminar pedido (ADMINISTRADOR)
-    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    // Eliminar pedido (antes ADMINISTRADOR)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePedido(@PathVariable Integer id) {
         pedidoService.deletePedido(id);

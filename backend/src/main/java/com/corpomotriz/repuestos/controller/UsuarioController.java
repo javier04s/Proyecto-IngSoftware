@@ -6,11 +6,11 @@ import com.corpomotriz.repuestos.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
@@ -28,16 +28,14 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoUsuario);
     }
 
-    // Listar usuarios (solo ADMINISTRADOR)
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    // Listar usuarios (sin restricción)
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> listarUsuarios() {
         List<UsuarioDTO> usuarios = usuarioService.getAllUsuarios();
         return ResponseEntity.ok(usuarios);
     }
 
-    // Obtener usuario por ID
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    // Obtener usuario por ID (sin restricción)
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioDTO> obtenerUsuarioPorId(@PathVariable Integer id) {
         return usuarioService.getUsuarioById(id)

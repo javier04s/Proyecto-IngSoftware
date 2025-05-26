@@ -5,12 +5,12 @@ import com.corpomotriz.repuestos.dto.ProveedorDTO;
 import com.corpomotriz.repuestos.service.ProveedorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/proveedores")
 public class ProveedorController {
@@ -21,16 +21,12 @@ public class ProveedorController {
         this.proveedorService = proveedorService;
     }
 
-    // Solo ADMINISTRADOR puede agregar proveedores
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<ProveedorDTO> agregarProveedor(@Valid @RequestBody ProveedorCrearDTO proveedorCrearDTO) {
         ProveedorDTO nuevoProveedor = proveedorService.createProveedor(proveedorCrearDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoProveedor);
     }
 
-    // Solo ADMINISTRADOR puede ver la lista de proveedores
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @GetMapping
     public ResponseEntity<List<ProveedorDTO>> consultarProveedores() {
         List<ProveedorDTO> proveedores = proveedorService.getAllProveedores();

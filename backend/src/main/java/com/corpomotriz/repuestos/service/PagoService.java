@@ -9,6 +9,8 @@ import com.corpomotriz.repuestos.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 public class PagoService {
 
@@ -26,7 +28,8 @@ public class PagoService {
                 .monto(pagoDTO.getMonto())
                 .metodo(pagoDTO.getMetodo())
                 .estado(pagoDTO.getEstado())
-                .fechaPago(pagoDTO.getFechaPago())
+                // Fecha de pago automática, ignorando la del DTO
+                .fechaPago(LocalDate.now())
                 .usuario(usuario)
                 .fechaCreacion(java.time.LocalDateTime.now())
                 .build();
@@ -43,7 +46,6 @@ public class PagoService {
         pago.setMetodo(pagoDTO.getMetodo());
         pago.setMonto(pagoDTO.getMonto());
         pago.setEstado(pagoDTO.getEstado());
-        pago.setFechaPago(pagoDTO.getFechaPago());
 
         Pago pagoActualizado = pagoRepository.save(pago);
         return mapToResponseDTO(pagoActualizado);

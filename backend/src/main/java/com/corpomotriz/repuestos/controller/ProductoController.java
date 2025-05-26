@@ -6,11 +6,11 @@ import com.corpomotriz.repuestos.service.ProductoService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/productos")
 public class ProductoController {
@@ -21,8 +21,7 @@ public class ProductoController {
         this.productoService = productoService;
     }
 
-    // Crear producto (solo administrador)
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    // Crear producto (antes solo administrador)
     @PostMapping
     public ResponseEntity<ProductoDTO> insertarProducto(@RequestBody ProductoCrearDTO productoCrearDTO) {
         ProductoDTO nuevoProducto = productoService.createProducto(productoCrearDTO);

@@ -36,11 +36,8 @@ public class PedidoService {
     }
 
     public List<PedidoDTO> getPedidosPorUsuario(String email) {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
-        if (usuarioOpt.isEmpty()) {
-            throw new RuntimeException("Usuario no encontrado");
-        }
-        Usuario usuario = usuarioOpt.get();
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         return pedidoRepository.findAll()
                 .stream()
                 .filter(p -> p.getUsuario().equals(usuario))
@@ -90,10 +87,13 @@ public class PedidoService {
     }
 
     private PedidoDTO convertirAPedidoDTO(Pedido pedido) {
+        Integer usuarioId = pedido.getUsuario() != null ? pedido.getUsuario().getId().intValue() : null;
+        Integer productoId = pedido.getProducto() != null ? pedido.getProducto().getId().intValue() : null;
+
         return PedidoDTO.builder()
                 .id(pedido.getId())
-                .usuarioId(Math.toIntExact(pedido.getUsuario() != null ? pedido.getUsuario().getId() : null))
-                .productoId(Math.toIntExact(pedido.getProducto() != null ? pedido.getProducto().getId() : null))
+                .usuarioId(usuarioId)
+                .productoId(productoId)
                 .cantidad(pedido.getCantidad())
                 .fecha(pedido.getFecha())
                 .build();

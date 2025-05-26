@@ -19,7 +19,6 @@ public class Usuario {
     private String nombre;
     private String email;
     private String contrasena;
-    private String rol;
 
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProveedorService {
@@ -22,7 +23,7 @@ public class ProveedorService {
     public List<ProveedorDTO> getAllProveedores() {
         return proveedorRepository.findAll().stream()
                 .map(this::toDTO)
-                .toList();
+                .collect(Collectors.toList()); // Compatibilidad con versiones Java < 16
     }
 
     public Optional<ProveedorDTO> getProveedorById(Integer id) {
@@ -31,6 +32,8 @@ public class ProveedorService {
     }
 
     public ProveedorDTO createProveedor(ProveedorCrearDTO dto) {
+        // Aquí podrías agregar validaciones si lo deseas
+
         Proveedor proveedor = Proveedor.builder()
                 .nombre(dto.getNombre())
                 .telefono(dto.getTelefono())
@@ -57,3 +60,4 @@ public class ProveedorService {
                 .build();
     }
 }
+

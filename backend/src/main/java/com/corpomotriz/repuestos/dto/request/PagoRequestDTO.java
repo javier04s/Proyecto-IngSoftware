@@ -23,7 +23,5 @@ public class PagoRequestDTO {
     @NotBlank(message = "El estado es obligatorio")
     private String estado;
 
-    @NotNull(message = "La fecha de pago es obligatoria")
-    private LocalDate fechaPago;
 }
 
