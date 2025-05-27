@@ -8,6 +8,7 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -24,6 +25,8 @@ public class PagoRequestDTO {
 
     @NotBlank(message = "El estado es obligatorio")
     private String estado;
+
+    private LocalDateTime fechaPago;
 
     @NotBlank(message = "El email del usuario es obligatorio")
     @Email(message = "Formato de email inválido")

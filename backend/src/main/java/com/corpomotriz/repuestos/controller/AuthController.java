@@ -29,7 +29,6 @@ public class AuthController {
 
         Usuario usuario = usuarioOpt.get();
 
-        // Comparación directa de contraseñas (no recomendado en producción)
         if (!loginRequest.getContrasena().equals(usuario.getContrasena())) {
             return ResponseEntity.status(401).body(Map.of("message", "Contraseña incorrecta"));
         }

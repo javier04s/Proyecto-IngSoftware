@@ -29,7 +29,6 @@ public class PedidoController {
         return ResponseEntity.ok(pedidos);
     }
 
-    // Consultar pedido por ID (antes ADMINISTRADOR)
     @GetMapping("/{id}")
     public ResponseEntity<PedidoDTO> getPedidoById(@PathVariable Integer id) {
         return pedidoService.getPedidoById(id)
@@ -37,7 +36,6 @@ public class PedidoController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Actualizar pedido (antes ADMINISTRADOR)
     @PutMapping("/{id}")
     public ResponseEntity<PedidoDTO> updatePedido(@PathVariable Integer id, @RequestBody PedidoCrearDTO pedidoCrearDTO) {
         try {
@@ -48,7 +46,6 @@ public class PedidoController {
         }
     }
 
-    // Eliminar pedido (antes ADMINISTRADOR)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePedido(@PathVariable Integer id) {
         pedidoService.deletePedido(id);

@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -19,7 +19,7 @@ public class PagoResponseDTO {
     private BigDecimal monto;
     private String metodo;
     private String estado;
-    private LocalDate fechaPago;
+    private LocalDateTime fechaPago;
 
     private List<PagoProductoDTO> productos;
 }

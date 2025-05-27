@@ -2,7 +2,9 @@ package com.corpomotriz.repuestos.service;
 
 import com.corpomotriz.repuestos.dto.crear.ProveedorCrearDTO;
 import com.corpomotriz.repuestos.dto.ProveedorDTO;
+import com.corpomotriz.repuestos.model.Producto;
 import com.corpomotriz.repuestos.model.Proveedor;
+import com.corpomotriz.repuestos.repository.ProductoRepository;
 import com.corpomotriz.repuestos.repository.ProveedorRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,15 +17,17 @@ import java.util.stream.Collectors;
 public class ProveedorService {
 
     private final ProveedorRepository proveedorRepository;
+    private final ProductoRepository productoRepository;
 
-    public ProveedorService(ProveedorRepository proveedorRepository) {
+    public ProveedorService(ProveedorRepository proveedorRepository, ProductoRepository productoRepository) {
         this.proveedorRepository = proveedorRepository;
+        this.productoRepository = productoRepository;
     }
 
     public List<ProveedorDTO> getAllProveedores() {
         return proveedorRepository.findAll().stream()
                 .map(this::toDTO)
-                .collect(Collectors.toList()); // Compatibilidad con versiones Java < 16
+                .collect(Collectors.toList());
     }
 
     public Optional<ProveedorDTO> getProveedorById(Integer id) {
@@ -31,9 +35,11 @@ public class ProveedorService {
                 .map(this::toDTO);
     }
 
-    public ProveedorDTO createProveedor(ProveedorCrearDTO dto) {
-        // Aquí podrías agregar validaciones si lo deseas
+    public List<Producto> obtenerProductosPorProveedor(Integer proveedorId) {
+        return productoRepository.findByProveedorId(proveedorId);
+    }
 
+    public ProveedorDTO createProveedor(ProveedorCrearDTO dto) {
         Proveedor proveedor = Proveedor.builder()
                 .nombre(dto.getNombre())
                 .telefono(dto.getTelefono())
@@ -60,4 +66,3 @@ public class ProveedorService {
                 .build();
     }
 }
-

@@ -1,9 +1,12 @@
 package com.corpomotriz.repuestos.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "proveedor", schema = "repuestos_db")
@@ -25,6 +28,9 @@ public class Proveedor {
 
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
+
+    @OneToMany(mappedBy = "proveedor")
+    private List<Producto> productos;
 
 }
 

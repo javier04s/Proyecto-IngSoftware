@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,23 +39,20 @@ public class PagoService {
                 .monto(pagoDTO.getMonto())
                 .metodo(pagoDTO.getMetodo())
                 .estado(pagoDTO.getEstado())
-                .fechaPago(LocalDate.now())
+                .fechaPago(LocalDateTime.now())
                 .usuario(usuario)
                 .build();
 
         Pago pagoGuardado = pagoRepository.save(pago);
 
-        // Procesar productos vinculados
         for (PagoProductoDTO productoDTO : pagoDTO.getProductos()) {
             Producto producto = productoRepository.findById(productoDTO.getProductoId())
                     .orElseThrow(() -> new RuntimeException("Producto con ID " + productoDTO.getProductoId() + " no encontrado"));
 
-            // Verificar stock suficiente
             if (producto.getCantidad() < productoDTO.getCantidad()) {
                 throw new RuntimeException("Stock insuficiente para producto ID " + producto.getId());
             }
 
-            // Crear entidad PagoProducto y guardar
             PagoProducto pagoProducto = PagoProducto.builder()
                     .pago(pagoGuardado)
                     .producto(producto)
@@ -62,7 +60,6 @@ public class PagoService {
                     .build();
             pagoProductoRepository.save(pagoProducto);
 
-            // Actualizar stock del producto
             producto.setCantidad(producto.getCantidad() - productoDTO.getCantidad());
             productoRepository.save(producto);
         }
@@ -85,8 +82,6 @@ public class PagoService {
             pago.setUsuario(usuario);
         }
 
-        // Si quieres actualizar productos relacionados también, deberías implementar lógica aquí (recomiendo hacerlo aparte).
-
         Pago pagoActualizado = pagoRepository.save(pago);
         return mapToResponseDTO(pagoActualizado);
     }
@@ -108,7 +103,7 @@ public class PagoService {
                 pago.getPagoProductos().stream()
                         .map(pp -> PagoProductoDTO.builder()
                                 .productoId(Math.toIntExact(pp.getProducto().getId()))
-                                .nombreProducto(pp.getProducto().getNombre()) // si tienes este campo en el DTO
+                                .nombreProducto(pp.getProducto().getNombre())
                                 .cantidad(pp.getCantidad())
                                 .build())
                         .collect(Collectors.toList());

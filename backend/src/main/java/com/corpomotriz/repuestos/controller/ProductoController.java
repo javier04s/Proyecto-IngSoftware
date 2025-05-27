@@ -21,21 +21,18 @@ public class ProductoController {
         this.productoService = productoService;
     }
 
-    // Crear producto (antes solo administrador)
     @PostMapping
     public ResponseEntity<ProductoDTO> insertarProducto(@RequestBody ProductoCrearDTO productoCrearDTO) {
         ProductoDTO nuevoProducto = productoService.createProducto(productoCrearDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoProducto);
     }
 
-    // Listar todos los productos
     @GetMapping
     public ResponseEntity<List<ProductoDTO>> consultarProductos() {
         List<ProductoDTO> productos = productoService.getAllProductos();
         return ResponseEntity.ok(productos);
     }
 
-    // Obtener producto por ID
     @GetMapping("/{id}")
     public ResponseEntity<ProductoDTO> consultarProductoPorId(@PathVariable Integer id) {
         return productoService.getProductoById(id)

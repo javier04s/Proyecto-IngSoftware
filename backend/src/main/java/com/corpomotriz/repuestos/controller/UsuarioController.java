@@ -21,21 +21,18 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-    // Crear nuevo usuario
     @PostMapping
     public ResponseEntity<UsuarioDTO> crearPerfil(@Valid @RequestBody UsuarioCrearDTO dto) {
         UsuarioDTO nuevoUsuario = usuarioService.createUser(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoUsuario);
     }
 
-    // Listar usuarios (sin restricción)
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> listarUsuarios() {
         List<UsuarioDTO> usuarios = usuarioService.getAllUsuarios();
         return ResponseEntity.ok(usuarios);
     }
 
-    // Obtener usuario por ID (sin restricción)
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioDTO> obtenerUsuarioPorId(@PathVariable Integer id) {
         return usuarioService.getUsuarioById(id)

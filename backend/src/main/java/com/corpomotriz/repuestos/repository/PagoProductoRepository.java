@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PagoProductoRepository extends JpaRepository<PagoProducto, Long> {
-    // Puedes agregar consultas personalizadas aquí si las necesitas
 }

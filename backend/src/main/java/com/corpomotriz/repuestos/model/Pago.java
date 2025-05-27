@@ -30,7 +30,7 @@ public class Pago {
     private Usuario usuario;
 
     @Column(name = "fecha_pago")
-    private LocalDate fechaPago;
+    private LocalDateTime fechaPago;
 
     @Column(precision = 10, scale = 2)
     private BigDecimal monto;
