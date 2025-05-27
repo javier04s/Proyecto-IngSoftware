@@ -29,7 +29,6 @@ export class ProductoService {
   }
 
   obtenerProductosPorProveedor(proveedorId: number): Observable<Producto[]> {
-    const url = `${this.urlBase}/${proveedorId}/productos`;
-    return this.clienteHttp.get<Producto[]>(url);
+    return this.clienteHttp.get<Producto[]>(`http://localhost:8080/proveedores/detalle/${proveedorId}/productos`);
   }
 }

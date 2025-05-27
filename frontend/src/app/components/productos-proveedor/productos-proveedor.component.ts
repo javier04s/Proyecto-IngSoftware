@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ProductoService } from '../../services/producto.service';
 import { Producto } from '../../model/producto';
@@ -16,19 +16,26 @@ export class ProductosProveedorComponent implements OnInit {
 
   private route = inject(ActivatedRoute);
   private productoService = inject(ProductoService);
+  private router = inject(Router);
 
   ngOnInit(): void {
-    this.proveedorId = Number(this.route.snapshot.paramMap.get('id'));
+    this.route.paramMap.subscribe(params => {
+      const idParam = params.get('id');
+      this.proveedorId = idParam ? Number(idParam) : NaN;
 
-    if (!isNaN(this.proveedorId)) {
-      this.productoService.obtenerProductosPorProveedor(this.proveedorId).subscribe({
-        next: (data) => {
-          this.productos = data;
-        },
-        error: (err) => {
-          console.error('Error al obtener productos del proveedor:', err);
-        }
-      });
-    }
+      if (!isNaN(this.proveedorId)) {
+        this.productoService.obtenerProductosPorProveedor(this.proveedorId).subscribe({
+          next: (data) => this.productos = data,
+          error: (err) => console.error('Error al obtener productos del proveedor:', err)
+        });
+      } else {
+        console.warn('ID del proveedor inválido');
+      }
+    });
   }
+
+  volverDetalle(): void {
+    this.router.navigate([`/proveedores/detalle/${this.proveedorId}`]);
+  }
+
 }

@@ -18,18 +18,17 @@ export class ProveedoresDetalleComponent implements OnInit {
   private router = inject(Router);
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    if (!isNaN(id)) {
-      this.proveedorService.obtenerProveedorPorId(id).subscribe({
-        next: (data) => {
-          this.proveedor = data;
-        },
-        error: (err) => {
-          console.error('Error al obtener el proveedor:', err);
-        } 
-      });
-    }
+    this.route.paramMap.subscribe(params => {
+      const id = Number(params.get('id'));
+      if (!isNaN(id)) {
+        this.proveedorService.obtenerProveedorPorId(id).subscribe({
+          next: (data) => this.proveedor = data,
+          error: (err) => console.error('Error al obtener el proveedor:', err)
+        });
+      }
+    });
   }
+
 
   volverListado(): void {
     this.router.navigate(['/proveedores']);
@@ -37,7 +36,7 @@ export class ProveedoresDetalleComponent implements OnInit {
 
   verProductosProveedor(): void {
     if (this.proveedor?.id) {
-      this.router.navigate([`/proveedores/${this.proveedor.id}/productos`]);
+      this.router.navigate([`/proveedores/detalle/${this.proveedor.id}/productos`]);
     }
   }
 }
