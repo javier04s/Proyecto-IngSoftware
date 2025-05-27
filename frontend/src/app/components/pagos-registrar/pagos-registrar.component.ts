@@ -1,3 +1,4 @@
+// pagos-registrar.component.ts
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PagosService } from '../../services/pagos.service';
@@ -35,6 +36,8 @@ export class PagosRegistrarComponent implements OnInit {
 
   errorStock: string = '';
 
+  rolUsuario: string | null = null; // <-- Nueva propiedad para el rol del usuario
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -46,12 +49,18 @@ export class PagosRegistrarComponent implements OnInit {
   ngOnInit(): void {
     this.cargarProductos();
 
+    // Obtener el email del usuario logueado
     const email = this.authService.getEmailUsuario();
     if (email) {
       this.pago.emailUsuario = email;
     } else {
       console.warn('No se encontró email de usuario logueado');
     }
+
+    // Obtener el rol del usuario logueado
+    this.rolUsuario = this.authService.getRol(); // <-- Obtener el rol aquí
+    console.log('Rol del usuario en PagosRegistrarComponent:', this.rolUsuario);
+
 
     this.route.paramMap.subscribe(params => {
       const idParam = params.get('id');
@@ -95,7 +104,7 @@ export class PagosRegistrarComponent implements OnInit {
             this.errorStock = `No hay suficiente stock para el producto "${producto.nombre}". Stock disponible: ${producto.cantidad}.`;
             console.warn(this.errorStock);
             this.pago.monto = 0;
-            return; 
+            return;
           }
           total += producto.precio * item.cantidad;
         } else {

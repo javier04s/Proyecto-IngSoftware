@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { UsuarioCrearDTO } from '../model/usuario';
+import { Router } from '@angular/router';
 
 export interface Usuario {
   id: number;
   nombre: string;
   email: string;
-  fechaCreacion: string;
+  fechaCreacion?: string;
   rol: string;
 }
 
@@ -25,6 +26,8 @@ export class UsuarioService {
 
   private usuarioSubject = new BehaviorSubject<Usuario | null>(null);
   usuario$ = this.usuarioSubject.asObservable();
+
+  private router: Router;
 
   constructor(private http: HttpClient) {
     const usuarioString = localStorage.getItem('usuario');

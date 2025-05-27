@@ -3,7 +3,7 @@ export interface Usuario {
   nombre: string;
   email: string;
   rol: string;
-  fechaCreacion: string;
+  fechaCreacion: string | Date;
 }
 
 export interface UsuarioCrearDTO {

@@ -49,7 +49,7 @@
         <th scope="col"><i class="bi bi-calendar-event"></i> Fecha de Pago</th>
         <th scope="col"><i class="bi bi-clock"></i> Hora</th>
         <th scope="col"><i class="bi bi-envelope"></i> Correo Electronico</th>
-        <th scope="col"><i class="bi bi-eye"></i> Modificar</th>
+        <th scope="col" *ngIf="rolUsuario === 'ADMINISTRADOR'"><i class="bi bi-eye"></i> Modificar</th>
       </tr>
     </thead>
     <tbody>
@@ -65,7 +65,7 @@
         <td>{{ pago.fechaPago | date:'shortDate' }}</td>
         <td>{{ pago.fechaPago | date:'shortTime' }}</td>
         <td>{{ pago.emailUsuario }}</td>
-        <td>
+        <td *ngIf="rolUsuario === 'ADMINISTRADOR'">
           <button class="btn btn-sm d-flex align-items-center" (click)="verDetalles(pago.id)"
             style="font-size: 14px; margin-left: 75px; background-color: #ff7f00; border-color: #ff7f00; color: white;"
             onmouseover="this.style.backgroundColor='#e67300'; this.style.borderColor='#e67300';"

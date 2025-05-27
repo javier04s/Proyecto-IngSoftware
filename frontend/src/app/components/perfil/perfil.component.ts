@@ -18,8 +18,13 @@ export class PerfilComponent implements OnInit {
     private router: Router
   ) { }
 
+  // En PerfilComponent.ts
   ngOnInit(): void {
     this.usuario = this.usuarioService.getUsuarioActual();
+    console.log('Objeto usuario completo:', this.usuario); // ¡MUY IMPORTANTE!
+    if (this.usuario) {
+      console.log('Valor de usuario.fechaCreacion:', this.usuario.fechaCreacion);
+    }
 
     this.usuarioService.getAllUsuarios().subscribe((data: Usuario[]) => {
       this.usuariosRegistrados = data;

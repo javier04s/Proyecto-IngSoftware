@@ -33,7 +33,20 @@
     </div>
   </div>
 
-  <div class="text-center mt-4">
+  <div class="mb-4">
+    <label class="form-label fw-semibold" style="color: #80bdff;">
+      Fecha de Creación:
+    </label>
+    <div class="input-group">
+      <span class="input-group-text"
+        style="background-color: #28a745; color: #fff; border-radius: 8px 0 0 8px; border: none;">
+        <i class="bi bi-calendar-event"></i> </span>
+      <input type="text" class="form-control" [value]="usuario?.fechaCreacion | date:'dd/MM/yyyy - h:mm a'" readonly
+        style="background-color: #2b2b2b; color: #f1f1f1; border: 1px solid #444; border-left: none; border-radius: 0 8px 8px 0;" />
+    </div>
+  </div>
+
+  <div class="text-center mt-4" *ngIf="usuario && usuario.rol === 'ADMINISTRADOR'">
     <button class="btn fw-bold"
       style="background-color: #28a745; color: #fff; padding: 12px 30px; border-radius: 10px; font-size: 16px; transition: 0.3s ease;"
       (click)="irAListaUsuarios()"

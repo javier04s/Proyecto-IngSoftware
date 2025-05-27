@@ -49,6 +49,7 @@ export class LoginComponent implements OnInit {
       next: (response) => {
         const usuario = response.usuario;
 
+        console.log('Usuario recibido en LoginComponent ANTES de setUsuario:', usuario);
         this.usuarioService.setUsuario(usuario);
 
         this.isLoading = false;

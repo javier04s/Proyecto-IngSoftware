@@ -10,7 +10,7 @@
     </div>
 
     <ng-container *ngIf="usuario$ | async as usuario">
-      <div>
+      <div *ngIf="usuario && usuario.rol === 'ADMINISTRADOR'">
         <button type="button" class="btn" (click)="interfazAggProducto()"
           style="background-color:#004A24; color: #fff; display: flex; flex-direction: row-reverse;
           justify-content: flex-start; align-items: center; gap: 10px; padding: 10px 20px;
@@ -45,7 +45,7 @@
     <thead style="background-color: #4b6cb7; color: #fff;">
       <tr>
         <th scope="col"><i class="bi bi-tag"></i> Nombre</th>
-        <th scope="col"><i class="bi bi-currency-dollar"></i> Precio</th>
+        <th scope="col"><i class="bi bi-cash"></i> Precio</th>
         <th scope="col"><i class="bi bi-box"></i> Cantidad</th>
         <th scope="col"><i class="bi bi-award"></i> Marca</th>
         <th scope="col"><i class="bi bi-eye"></i> Detalles</th>
