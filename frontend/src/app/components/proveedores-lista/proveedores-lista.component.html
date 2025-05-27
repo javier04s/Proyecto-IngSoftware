@@ -8,11 +8,13 @@
       </h3>
     </div>
 
-    <button
-      type="button"
-      class="btn btn-outline-primary d-flex align-items-center"
-      (click)="interfazAggProveedor()"
-    >
+    <button type="button" class="btn btn-dark" (click)="interfazAggProveedor()"
+      style="background-color:#004A24; display:flex; flex-direction: row-reverse;
+      justify-content: flex-start; flex-wrap: nowrap; align-items: center; align-content: flex-start;
+      gap: 10px; padding: 10px 20px; transition: background-color 0.3s ease,
+      transform 0.2s ease;" onmouseover="this.style.backgroundColor='#005E2C';
+      this.style.transform='scale(1.05)';" onmouseout="this.style.backgroundColor='#004A24';
+      this.style.transform='scale(1)';">
       <i class="bi bi-bag-plus me-2"></i> Añadir proveedores
     </button>
 
@@ -29,6 +31,7 @@
           <th scope="col"><i class="bi bi-geo-fill me-1"></i>Localización</th>
           <th scope="col"><i class="bi bi-r-square me-1"></i>Especialización</th>
           <th scope="col"><i class="bi bi-box-seam me-1"></i>Plazo de Entrega</th>
+          <th scope="col"><i class="bi bi-box-arrow-in-right"></i>Fecha de Contrato</th>
         </tr>
       </thead>
       <tbody>
@@ -41,6 +44,7 @@
             <td>{{proveedor.localizacion}}</td>
             <td>{{proveedor.especializacion}}</td>
             <td>{{proveedor.plazoEntrega}}</td>
+            <td>{{proveedor.fechaCreacion}}</td>
           </tr>
         }
       </tbody>
