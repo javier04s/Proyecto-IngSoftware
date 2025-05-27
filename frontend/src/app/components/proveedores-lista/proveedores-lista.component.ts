@@ -4,10 +4,12 @@ import { ProveedorService } from '../../services/proveedor.service';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-proveedor-lista',
-  templateUrl: './proveedores-lista.component.html'
+  templateUrl: './proveedores-lista.component.html',
+  imports: [CommonModule, NgFor, NgIf]
 })
 export class ProveedorListaComponent implements OnInit, OnDestroy {
   proveedores: Proveedor[] = [];
@@ -48,5 +50,9 @@ export class ProveedorListaComponent implements OnInit, OnDestroy {
 
   interfazAggProveedor(): void {
     this.router.navigate(['/proveedores/agregar']);
+  }
+
+  abrirDetalles(id: number): void {
+    this.router.navigate(['/proveedores/detalle', id]);
   }
 }

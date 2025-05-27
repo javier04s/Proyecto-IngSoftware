@@ -11,6 +11,7 @@ import { ProveedoresAgregarComponent } from './components/proveedores-agregar/pr
 import { PagosListaComponent } from './components/pagos-lista/pagos-lista.component';
 import { PagosRegistrarComponent } from './components/pagos-registrar/pagos-registrar.component';
 import { RoleGuard } from './guard/role.guard';
+import { ProveedoresDetalleComponent } from './components/proveedores-detalle/proveedores-detalle.component';
 
 export const routes: Routes = [
   { path: 'productos', component: ProductoListaComponent },
@@ -27,4 +28,6 @@ export const routes: Routes = [
   { path: 'usuarios/registrados', component: ListaUsuariosComponent, canActivate: [RoleGuard], data: { roles: ['ADMINISTRADOR'] } },
   { path: 'proveedores', component: ProveedorListaComponent, canActivate: [RoleGuard], data: { roles: ['ADMINISTRADOR'] }},
   { path: 'proveedores/agregar', component: ProveedoresAgregarComponent, canActivate: [RoleGuard], data: { roles: ['ADMINISTRADOR'] } },
+  { path: 'proveedores/detalle/:id', component: ProveedoresDetalleComponent, canActivate: [RoleGuard], data: { roles: ['ADMINISTRADOR'] } },
+  { path: 'proveedores/:id/productos', component: ProveedoresDetalleComponent, canActivate: [RoleGuard], data: { roles: ['ADMINISTRADOR'] } }
 ];

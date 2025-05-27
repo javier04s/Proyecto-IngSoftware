@@ -16,13 +16,14 @@ import { AuthService } from '../../services/auth.service';
 })
 export class PagosRegistrarComponent implements OnInit {
 
-  pago: PagoRequest & { productos: { productoId: number | null; cantidad: number }[] } = {
+  pago: PagoRequest = {
     monto: 0,
     metodo: '',
-    estado: '',
+    estado: 'PENDIENTE',
     emailUsuario: '',
     productos: []
   };
+
   pagoId: number | null = null;
   esEdicion: boolean = false;
   tituloFormulario: string = 'Registrar Nuevo Pago';
@@ -31,6 +32,8 @@ export class PagosRegistrarComponent implements OnInit {
   metodos: string[] = ['TARJETA'];
 
   productosDisponibles: Producto[] = [];
+
+  errorStock: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -74,6 +77,7 @@ export class PagosRegistrarComponent implements OnInit {
   }
 
   aceptarProductos(): void {
+    this.errorStock = '';
     console.log('Productos en pago antes de calcular:', this.pago.productos);
     let total = 0;
 
@@ -87,6 +91,12 @@ export class PagosRegistrarComponent implements OnInit {
         console.log('Producto encontrado:', producto);
 
         if (producto) {
+          if (item.cantidad > producto.cantidad) {
+            this.errorStock = `No hay suficiente stock para el producto "${producto.nombre}". Stock disponible: ${producto.cantidad}.`;
+            console.warn(this.errorStock);
+            this.pago.monto = 0;
+            return; 
+          }
           total += producto.precio * item.cantidad;
         } else {
           console.warn(`No se encontró producto con id ${idProducto}`);
@@ -117,7 +127,10 @@ export class PagosRegistrarComponent implements OnInit {
           metodo: data.metodo,
           estado: data.estado,
           emailUsuario: data.emailUsuario,
-          productos: []
+          productos: data.productos ? data.productos.map(p => ({
+            productoId: p.productoId,
+            cantidad: p.cantidad
+          })) : []
         };
       },
       error: () => {
@@ -128,6 +141,12 @@ export class PagosRegistrarComponent implements OnInit {
   }
 
   guardarPago(): void {
+
+    if (this.errorStock) {
+      alert(this.errorStock);
+      return;
+    }
+
     if (this.esEdicion && this.pagoId !== null) {
       this.pagosService.actualizarPago(this.pagoId, this.pago).subscribe({
         next: () => {

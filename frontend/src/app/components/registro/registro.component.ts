@@ -2,16 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { UsuarioService } from '../../services/usuario.service';
 import { UsuarioCrearDTO } from '../../model/usuario';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-registro',
   templateUrl: './registro.component.html',
   standalone: true,
-  imports: [ReactiveFormsModule]
+  imports: [ReactiveFormsModule, NgIf]
 })
 export class RegistroComponent implements OnInit {
 
   registroForm!: FormGroup;
+  mostrarModal = false;
+  modalTipo: 'exito' | 'error' = 'exito';
 
   constructor(private fb: FormBuilder, private usuarioService: UsuarioService) { }
 
@@ -25,17 +28,21 @@ export class RegistroComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.registroForm.valid) {
-      const usuario: UsuarioCrearDTO = this.registroForm.value;
-      this.usuarioService.crearUsuario(usuario).subscribe({
-        next: () => {
-          alert('Usuario registrado correctamente');
-          this.registroForm.reset();
-        },
-        error: (err) => {
-          alert('Error al registrar usuario: ' + (err.error?.message || err.message));
-        }
-      });
+    if (this.registroForm.invalid) {
+      return;
     }
+    const usuario: UsuarioCrearDTO = this.registroForm.value;
+
+    this.usuarioService.crearUsuario(usuario).subscribe({
+      next: () => {
+        this.modalTipo = 'exito';
+        this.mostrarModal = true;
+        this.registroForm.reset();
+      },
+      error: (err) => {
+        this.modalTipo = 'error';
+        this.mostrarModal = true;
+      }
+    });
   }
 }

@@ -1,72 +1,134 @@
 <div class="container">
   <nav class="navbar navbar-expand-lg"
-    style="background: linear-gradient(90deg, #4b6cb7, #182848); font-family: 'Poppins', sans-serif;">
-    <div class="container-fluid d-flex align-items-center">
-      <a class="navbar-brand text-white me-4 pe-4" routerLink="/productos"
-        style="font-weight: 800; font-size: 1.8rem; letter-spacing: 1px; text-shadow: 1px 1px 3px rgba(0,0,0,0.3); border-right: 2px solid rgba(240,165,0,0.5);">
+    style="background: linear-gradient(90deg, #283e51, #485563); font-family: 'Segoe UI', sans-serif; padding: 0.8rem 1.2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 12px;">
+
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+
+      <a class="navbar-brand" routerLink="/productos"
+        style="color: #ffffff; font-weight: 800; font-size: 1.7rem; letter-spacing: 1px; padding-right: 1rem; border-right: 2px solid rgba(255,255,255,0.3); text-shadow: 1px 1px 4px rgba(0,0,0,0.4);">
         Corpomotriz Los Salias
       </a>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div class="collapse navbar-collapse ms-4" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex align-items-center">
-          <li class="nav-item ms-5">
-            <a class="nav-link custom-nav-link" routerLink="/productos" routerLinkActive="active-link"
-              [routerLinkActiveOptions]="{ exact: true }">
+          <li class="nav-item ms-4">
+            <a class="nav-link" routerLink="/productos" routerLinkActive="active-link"
+              [routerLinkActiveOptions]="{ exact: true }"
+              style="color: #ffffff; font-weight: 600; display: flex; align-items: center; border-bottom: 2px solid transparent; transition: all 0.3s ease;"
+              onmouseover="this.style.color='#f1c40f'; this.style.borderBottomColor='#f1c40f'"
+              onmouseout="if(!this.classList.contains('active-link')){this.style.color='#ffffff'; this.style.borderBottomColor='transparent'}">
               <i class="bi bi-box-seam me-2"></i>Productos
             </a>
           </li>
-          <li class="nav-item ms-5">
-            <a class="nav-link custom-nav-link" routerLink="/pagos" routerLinkActive="active-link">
+          <li class="nav-item ms-4">
+            <a class="nav-link" routerLink="/pagos" routerLinkActive="active-link"
+              style="color: #ffffff; font-weight: 600; display: flex; align-items: center; border-bottom: 2px solid transparent; transition: all 0.3s ease;"
+              onmouseover="this.style.color='#f1c40f'; this.style.borderBottomColor='#f1c40f'"
+              onmouseout="if(!this.classList.contains('active-link')){this.style.color='#ffffff'; this.style.borderBottomColor='transparent'}">
               <i class="bi bi-cash-stack me-2"></i>Pagos
             </a>
           </li>
-          <li class="nav-item ms-5">
-            <a class="nav-link custom-nav-link" routerLink="/proveedores" routerLinkActive="active-link">
+          <li class="nav-item ms-4">
+            <a class="nav-link" routerLink="/proveedores" routerLinkActive="active-link"
+              style="color: #ffffff; font-weight: 600; display: flex; align-items: center; border-bottom: 2px solid transparent; transition: all 0.3s ease;"
+              onmouseover="this.style.color='#f1c40f'; this.style.borderBottomColor='#f1c40f'"
+              onmouseout="if(!this.classList.contains('active-link')){this.style.color='#ffffff'; this.style.borderBottomColor='transparent'}">
               <i class="bi bi-truck me-2"></i>Proveedores
             </a>
           </li>
         </ul>
 
-        <ul class="navbar-nav ms-2 align-items-center d-flex">
+        <!-- Perfil y sesión -->
+        <ul class="navbar-nav d-flex align-items-center">
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPerfil" role="button"
               data-bs-toggle="dropdown" aria-expanded="false"
-              style="background-color: #f0a500; color: #182848; border-radius: 8px; padding: 8px 18px; font-weight: 700; box-shadow: 0 3px 6px rgba(240,165,0,0.6); transition: background-color 0.3s ease;">
+              style="background-color: #ffc107; color: #212529; font-weight: 700; padding: 8px 16px; border-radius: 10px; transition: background-color 0.3s ease; box-shadow: 0 3px 6px rgba(0,0,0,0.2);">
               Perfil
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownPerfil"
-              style="border-radius: 8px; box-shadow: 0 5px 15px rgba(24,40,72,0.3);">
+              style="border-radius: 10px; background-color: #2c3e50; box-shadow: 0 8px 16px rgba(0,0,0,0.2);">
 
               <li *ngIf="estaAutenticado">
-                <a class="dropdown-item" routerLink="/perfil" style="font-weight: 600;">
+                <a class="dropdown-item" routerLink="/perfil"
+                  style="font-weight: 600; color: #ecf0f1; display: flex; align-items: center; transition: background-color 0.3s;"
+                  onmouseover="this.style.backgroundColor='#34495e'"
+                  onmouseout="this.style.backgroundColor='transparent'">
                   <i class="bi bi-person-lines-fill me-2"></i>Examinar perfil
                 </a>
               </li>
 
               <ng-container *ngIf="!estaAutenticado">
                 <li>
-                  <a class="dropdown-item" routerLink="/registro" style="font-weight: 600;">
+                  <a class="dropdown-item" routerLink="/registro"
+                    style="font-weight: 600; color: #ecf0f1; display: flex; align-items: center; transition: background-color 0.3s;"
+                    onmouseover="this.style.backgroundColor='#34495e'"
+                    onmouseout="this.style.backgroundColor='transparent'">
                     <i class="bi bi-person-plus me-2"></i>Registrarse
                   </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" routerLink="/iniciar-sesion" style="font-weight: 600;">
+                  <a class="dropdown-item" routerLink="/iniciar-sesion"
+                    style="font-weight: 600; color: #ecf0f1; display: flex; align-items: center; transition: background-color 0.3s;"
+                    onmouseover="this.style.backgroundColor='#34495e'"
+                    onmouseout="this.style.backgroundColor='transparent'">
                     <i class="bi bi-key-fill me-2"></i>Iniciar Sesión
                   </a>
                 </li>
               </ng-container>
-
             </ul>
           </li>
 
           <li *ngIf="estaAutenticado" class="nav-item">
-            <button (click)="cerrarSesion()" class="btn ms-3"
-              style="background-color: #f05454; color: white; font-weight: 700; padding: 8px 18px; border-radius: 8px; box-shadow: 0 3px 8px rgba(240,84,84,0.6); transition: background-color 0.3s ease;">
+            <button type="button" class="btn ms-3" data-bs-toggle="modal" data-bs-target="#cerrarSesionModal"
+              style="background-color: #dc3545; color: white; font-weight: 700; padding: 8px 16px; border-radius: 10px; box-shadow: 0 4px 10px rgba(220,53,69,0.5); transition: background-color 0.3s ease, transform 0.2s ease;"
+              onmouseover="this.style.backgroundColor='#c82333'; this.style.transform='scale(1.03)'"
+              onmouseout="this.style.backgroundColor='#dc3545'; this.style.transform='scale(1)'">
               Cerrar Sesión
             </button>
+
           </li>
         </ul>
       </div>
     </div>
   </nav>
+
+  <div class="modal fade" id="cerrarSesionModal" tabindex="-1" aria-labelledby="cerrarSesionModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content"
+        style="border-radius: 16px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.3); animation: zoomIn 0.3s ease-out;">
+
+        <div class="modal-header" style="background: linear-gradient(90deg, #f39c12, #f1c40f); color: #2c3e50;">
+          <h5 class="modal-title fw-bold d-flex align-items-center" id="cerrarSesionModalLabel">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> Confirmar Cierre de Sesión
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+
+        <div class="modal-body text-center p-4" style="font-size: 1.1rem;">
+          ¿Estás seguro que deseas cerrar sesión?
+        </div>
+
+        <div class="modal-footer d-flex justify-content-between px-4 pb-4">
+          <button type="button" class="btn btn-danger px-4 fw-semibold" data-bs-dismiss="modal"
+            style="border-radius: 8px; box-shadow: 0 4px 10px rgba(220,53,69,0.5); transition: background-color 0.3s ease, transform 0.2s ease;"
+            onmouseover="this.style.backgroundColor='#c82333'; this.style.transform='scale(1.03)'"
+            onmouseout="this.style.backgroundColor='#dc3545'; this.style.transform='scale(1)'">
+            No
+          </button>
+
+          <button type="button" class="btn btn-outline-secondary px-4 fw-semibold" (click)="confirmarCerrarSesion()"
+            style="border-radius: 8px; background-color: transparent; transition: all 0.2s ease;"
+            onmouseover="this.style.backgroundColor='#bdc3c7'; this.style.color='#2c3e50';"
+            onmouseout="this.style.backgroundColor='transparent'; this.style.color='inherit';">
+            Sí
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 </div>

@@ -27,4 +27,9 @@ export class ProductoService {
   obtenerProveedores(): Observable<Proveedor[]> {
     return this.clienteHttp.get<Proveedor[]>('http://localhost:8080/proveedores');
   }
+
+  obtenerProductosPorProveedor(proveedorId: number): Observable<Producto[]> {
+    const url = `${this.urlBase}/${proveedorId}/productos`;
+    return this.clienteHttp.get<Producto[]>(url);
+  }
 }

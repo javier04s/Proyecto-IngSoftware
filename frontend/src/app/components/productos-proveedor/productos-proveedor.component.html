@@ -1,0 +1,15 @@
+<div class="container mt-4">
+  <h2 style="color: #f1f1f1;"><i class="bi bi-box-seam me-2"></i>Productos del Proveedor</h2>
+
+  <ul *ngIf="productos.length > 0; else sinProductos" class="list-group mt-3">
+    <li class="list-group-item" *ngFor="let producto of productos" style="background-color: #2c2f36; color: #fff; border-color: #444;">
+      <strong>Nombre:</strong> {{ producto.nombre }} <br>
+      <strong>Descripción:</strong> {{ producto.descripcion }} <br>
+      <strong>Precio:</strong> {{ producto.precio | currency:'USD' }}
+    </li>
+  </ul>
+
+  <ng-template #sinProductos>
+    <p style="color: #ccc;">Este proveedor aún no tiene productos registrados.</p>
+  </ng-template>
+</div>

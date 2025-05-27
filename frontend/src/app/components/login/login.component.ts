@@ -7,6 +7,7 @@ import { NgIf } from '@angular/common';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css'],
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -14,10 +15,12 @@ import { NgIf } from '@angular/common';
   ]
 })
 export class LoginComponent implements OnInit {
-
   loginForm!: FormGroup;
   errorMessage: string | null = null;
   isLoading = false;
+
+  mostrarModal = false;
+  modalTipo: 'exito' | 'error' = 'exito';
 
   constructor(
     private fb: FormBuilder,
@@ -46,24 +49,30 @@ export class LoginComponent implements OnInit {
       next: (response) => {
         const usuario = response.usuario;
 
-        console.log('Objeto usuario recibido:', usuario);
-
         this.usuarioService.setUsuario(usuario);
 
-        console.log('Rol del usuario:', usuario.rol);
-
         this.isLoading = false;
-
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-
-        this.router.navigate(['/']);
+        this.modalTipo = 'exito';
+        this.mostrarModal = true;
       },
       error: (err) => {
         this.isLoading = false;
         this.errorMessage = err.error?.message || 'Credenciales inválidas o error de servidor.';
+        this.modalTipo = 'error';
+        this.mostrarModal = true;
       }
     });
+  }
+
+  continuar(): void {
+    if (this.modalTipo === 'exito') {
+      this.mostrarModal = false;
+      this.router.navigate(['/']);
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    } else {
+      this.mostrarModal = false;
+    }
   }
 }

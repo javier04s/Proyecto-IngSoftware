@@ -1,56 +1,61 @@
-<div class="container" style="max-width: 400px; margin-top: 50px;">
-  <div class="p-4 shadow rounded" style="background: #f9fbff; font-family: 'Poppins', sans-serif;">
-    <h2 class="text-center mb-4" style="font-weight: 800; color: #182848;">
+<div class="container mt-5" style="max-width: 600px;">
+  <div
+    style="background-color: #1e1e1e; padding: 30px; border-radius: 16px; box-shadow: 0 0 20px rgba(0,0,0,0.5); font-family: 'Poppins', sans-serif; color: #f1f1f1;">
+    <h2 class="text-center mb-4" style="font-weight: 700; color: #ffffff; margin-bottom: 30px;">
       Iniciar Sesión
     </h2>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
-      <div class="mb-3 position-relative">
-        <label for="email" class="form-label fw-semibold text-primary">Correo electrónico:</label>
-        <div class="input-group">
-          <span class="input-group-text bg-primary text-white">
-            <i class="bi bi-envelope-fill"></i>
-          </span>
-          <input
-            id="email"
-            formControlName="email"
-            type="email"
-            class="form-control"
-            placeholder="ejemplo@correo.com"
-          />
+      <div class="mb-4">
+        <label for="email" style="color: #80bdff; font-weight: 500;">Correo electrónico:</label>
+        <input id="email" formControlName="email" type="email" placeholder="ejemplo@correo.com" class="form-control"
+          style="background: #2b2b2b; border: 1px solid #444; border-radius: 8px; color: #f1f1f1;"
+          [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" />
+        <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="invalid-feedback"
+          style="color: #dc3545;">
+          El correo es requerido y debe ser válido.
         </div>
       </div>
 
-      <div class="mb-4 position-relative">
-        <label for="contrasena" class="form-label fw-semibold text-primary">Contraseña:</label>
-        <div class="input-group">
-          <span class="input-group-text bg-primary text-white">
-            <i class="bi bi-lock-fill"></i>
-          </span>
-          <input
-            id="contrasena"
-            formControlName="contrasena"
-            type="password"
-            class="form-control"
-            placeholder="Tu contraseña"
-          />
+      <div class="mb-4">
+        <label for="contrasena" style="color: #80bdff; font-weight: 500;">Contraseña:</label>
+        <input id="contrasena" formControlName="contrasena" type="password" placeholder="Tu contraseña"
+          class="form-control" style="background: #2b2b2b; border: 1px solid #444; border-radius: 8px; color: #f1f1f1;"
+          [class.is-invalid]="loginForm.get('contrasena')?.invalid && loginForm.get('contrasena')?.touched" />
+        <div *ngIf="loginForm.get('contrasena')?.invalid && loginForm.get('contrasena')?.touched"
+          class="invalid-feedback" style="color: #dc3545;">
+          La contraseña es requerida.
         </div>
       </div>
 
-      <button
-        type="submit"
-        class="btn btn-primary w-100 fw-bold"
-        [disabled]="loginForm.invalid"
-        style="font-size: 1.1rem; padding: 10px; background-color: #004A24;"
-      >
-        <i class="bi bi-box-arrow-in-right me-2"></i> Entrar
-      </button>
+      <div class="d-flex justify-content-center mt-4">
+        <button type="submit" class="btn fw-bold" [disabled]="loginForm.invalid || isLoading"
+          style="background-color: #28a745; color: #fff; padding: 12px 30px; border-radius: 10px; font-size: 16px; transition: 0.3s ease;"
+          onmouseover="this.style.backgroundColor='#218838'; this.style.transform='scale(1.05)'"
+          onmouseout="this.style.backgroundColor='#28a745'; this.style.transform='scale(1)'">
+          Entrar
+        </button>
+      </div>
 
-      <div *ngIf="errorMessage" class="error-message mt-3 text-danger fw-semibold text-center">
+      <div *ngIf="errorMessage" class="alert alert-danger mt-3" role="alert"
+        style="color: #dc3545; background: transparent; border: none; text-align: center;">
         {{ errorMessage }}
       </div>
 
     </form>
+  </div>
+</div>
+
+<div *ngIf="mostrarModal" class="modal-backdrop">
+  <div class="modal-content">
+    <div *ngIf="modalTipo === 'exito'" class="checkmark-wrapper">
+      <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" width="80" height="80">
+        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
+        <path class="checkmark__check" fill="none" d="M14 27l7 7 16-16" />
+      </svg>
+      <h3>Inicio de sesión correcto</h3>
+      <button (click)="continuar()">Continuar</button>
+    </div>
   </div>
 </div>
