@@ -1,5 +1,6 @@
 package com.corpomotriz.repuestos.controller;
 
+import com.corpomotriz.repuestos.dto.ProductoDTO;
 import com.corpomotriz.repuestos.dto.crear.ProveedorCrearDTO;
 import com.corpomotriz.repuestos.dto.ProveedorDTO;
 import com.corpomotriz.repuestos.model.Producto;
@@ -28,9 +29,9 @@ public class ProveedorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoProveedor);
     }
 
-    @GetMapping("/{id}/productos")
-    public ResponseEntity<List<Producto>> obtenerProductosPorProveedor(@PathVariable Long id) {
-        List<Producto> productos = proveedorService.obtenerProductosPorProveedor(Math.toIntExact(id));
+    @GetMapping("/detalle/{id}/productos")
+    public ResponseEntity<List<ProductoDTO>> obtenerProductosPorProveedor(@PathVariable Long id) {
+        List<ProductoDTO> productos = proveedorService.obtenerProductosDTOPorProveedor(Math.toIntExact(id));
         if (productos.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -44,8 +45,8 @@ public class ProveedorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProveedorDTO> obtenerProveedorPorId(@PathVariable Integer id) {
-        return proveedorService.getProveedorById(id)
+    public ResponseEntity<ProveedorDTO> obtenerProveedorPorId(@PathVariable Long id) {
+        return proveedorService.getProveedorById(Math.toIntExact(id))
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }

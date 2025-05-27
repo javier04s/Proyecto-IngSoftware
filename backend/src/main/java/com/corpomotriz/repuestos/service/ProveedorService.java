@@ -1,5 +1,6 @@
 package com.corpomotriz.repuestos.service;
 
+import com.corpomotriz.repuestos.dto.ProductoDTO;
 import com.corpomotriz.repuestos.dto.crear.ProveedorCrearDTO;
 import com.corpomotriz.repuestos.dto.ProveedorDTO;
 import com.corpomotriz.repuestos.model.Producto;
@@ -28,6 +29,11 @@ public class ProveedorService {
         return proveedorRepository.findAll().stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    public List<ProductoDTO> obtenerProductosDTOPorProveedor(Integer proveedorId) {
+        List<Producto> productos = obtenerProductosPorProveedor(proveedorId);
+        return productos.stream().map(this::convertirADTO).toList();
     }
 
     public Optional<ProveedorDTO> getProveedorById(Integer id) {
@@ -63,6 +69,30 @@ public class ProveedorService {
                 .especializacion(proveedor.getEspecializacion())
                 .plazoEntrega(proveedor.getPlazoEntrega())
                 .fechaCreacion(proveedor.getFechaCreacion())
+                .build();
+    }
+
+    private ProductoDTO convertirADTO(Producto producto) {
+        return ProductoDTO.builder()
+                .id(producto.getId())
+                .nombre(producto.getNombre())
+                .descripcion(producto.getDescripcion())
+                .precio(producto.getPrecio())
+                .cantidad(producto.getCantidad())
+                .marca(producto.getMarca())
+                .fechaCreacion(producto.getFechaCreacion())
+                .proveedor(
+                        ProveedorDTO.builder()
+                                .id(producto.getProveedor().getId())
+                                .nombre(producto.getProveedor().getNombre())
+                                .telefono(producto.getProveedor().getTelefono())
+                                .email(producto.getProveedor().getEmail())
+                                .localizacion(producto.getProveedor().getLocalizacion())
+                                .especializacion(producto.getProveedor().getEspecializacion())
+                                .plazoEntrega(producto.getProveedor().getPlazoEntrega())
+                                .fechaCreacion(producto.getProveedor().getFechaCreacion())
+                                .build()
+                )
                 .build();
     }
 }
