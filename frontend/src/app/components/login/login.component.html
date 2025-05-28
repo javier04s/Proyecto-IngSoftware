@@ -57,5 +57,13 @@
       <h3>Inicio de sesión correcto</h3>
       <button (click)="continuar()">Continuar</button>
     </div>
+    <div *ngIf="modalTipo === 'error'" class="checkmark-wrapper">
+      <svg class="checkmark2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" width="80" height="80">
+        <circle class="checkmark__circle2" cx="26" cy="26" r="25" fill="none" />
+        <path class="checkmark__check" fill="none" d="M15 15l22 22M15 37l22-22" />
+      </svg>
+      <h3>Inicio de sesión fallido</h3>
+      <button id="b2" (click)="continuar()">Regresar</button>
+    </div>
   </div>
 </div>
