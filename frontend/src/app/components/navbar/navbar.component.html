@@ -28,7 +28,7 @@
               <i class="bi bi-cash-stack me-2"></i>Pagos
             </a>
           </li>
-          <li class="nav-item ms-4">
+          <li class="nav-item ms-4" *ngIf="rolUsuario === 'ADMINISTRADOR'">
             <a class="nav-link" routerLink="/proveedores" routerLinkActive="active-link"
               style="color: #ffffff; font-weight: 600; display: flex; align-items: center; border-bottom: 2px solid transparent; transition: all 0.3s ease;"
               onmouseover="this.style.color='#f1c40f'; this.style.borderBottomColor='#f1c40f'"
@@ -99,7 +99,7 @@
         style="border-radius: 16px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.3); animation: zoomIn 0.3s ease-out;">
 
         <div class="modal-header" style="background: linear-gradient(90deg, #f39c12, #f1c40f); color: #2c3e50;">
-          <h5 class="modal-title fw-bold d-flex align-items-center" id="cerrarSesionModalLabel">
+          <h5 class="modal-title fw-bold d-flex align-items: center;" id="cerrarSesionModalLabel">
             <i class="bi bi-exclamation-triangle-fill me-2"></i> Confirmar Cierre de Sesión
           </h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
