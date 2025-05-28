@@ -20,7 +20,7 @@
               <i class="bi bi-box-seam me-2"></i>Productos
             </a>
           </li>
-          <li class="nav-item ms-4">
+          <li class="nav-item ms-4" *ngIf="rolUsuario === 'CLIENTE' || rolUsuario === 'ADMINISTRADOR'">
             <a class="nav-link" routerLink="/pagos" routerLinkActive="active-link"
               style="color: #ffffff; font-weight: 600; display: flex; align-items: center; border-bottom: 2px solid transparent; transition: all 0.3s ease;"
               onmouseover="this.style.color='#f1c40f'; this.style.borderBottomColor='#f1c40f'"
@@ -38,7 +38,6 @@
           </li>
         </ul>
 
-        <!-- Perfil y sesión -->
         <ul class="navbar-nav d-flex align-items-center">
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPerfil" role="button"

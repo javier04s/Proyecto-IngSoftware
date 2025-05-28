@@ -22,7 +22,12 @@ export class PagosRegistrarComponent implements OnInit {
     metodo: '',
     estado: 'PENDIENTE',
     emailUsuario: '',
-    productos: []
+    productos: [],
+    // Nuevos campos para la tarjeta de crédito
+    numeroTarjeta: '',
+    fechaExpiracion: '',
+    cvv: '',
+    nombreTitular: ''
   };
 
   pagoId: number | null = null;
@@ -30,13 +35,14 @@ export class PagosRegistrarComponent implements OnInit {
   tituloFormulario: string = 'Registrar Nuevo Pago';
 
   estados: string[] = ['PENDIENTE', 'COMPLETADO', 'RECHAZADO'];
-  metodos: string[] = ['TARJETA'];
+  metodos: string[] = ['TARJETA']; // Asegúrate de que 'TARJETA' esté en la lista de métodos
 
   productosDisponibles: Producto[] = [];
 
   errorStock: string = '';
+  errorTarjeta: string = ''; // Nuevo para manejar errores de tarjeta
 
-  rolUsuario: string | null = null; // <-- Nueva propiedad para el rol del usuario
+  rolUsuario: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -49,7 +55,6 @@ export class PagosRegistrarComponent implements OnInit {
   ngOnInit(): void {
     this.cargarProductos();
 
-    // Obtener el email del usuario logueado
     const email = this.authService.getEmailUsuario();
     if (email) {
       this.pago.emailUsuario = email;
@@ -57,10 +62,8 @@ export class PagosRegistrarComponent implements OnInit {
       console.warn('No se encontró email de usuario logueado');
     }
 
-    // Obtener el rol del usuario logueado
-    this.rolUsuario = this.authService.getRol(); // <-- Obtener el rol aquí
+    this.rolUsuario = this.authService.getRol();
     console.log('Rol del usuario en PagosRegistrarComponent:', this.rolUsuario);
-
 
     this.route.paramMap.subscribe(params => {
       const idParam = params.get('id');
@@ -139,7 +142,12 @@ export class PagosRegistrarComponent implements OnInit {
           productos: data.productos ? data.productos.map(p => ({
             productoId: p.productoId,
             cantidad: p.cantidad
-          })) : []
+          })) : [],
+          // Asignar datos de tarjeta si existen (para edición)
+          numeroTarjeta: data.numeroTarjeta || '',
+          fechaExpiracion: data.fechaExpiracion || '',
+          cvv: data.cvv || '',
+          nombreTitular: data.nombreTitular || ''
         };
       },
       error: () => {
@@ -149,11 +157,80 @@ export class PagosRegistrarComponent implements OnInit {
     });
   }
 
-  guardarPago(): void {
+  // --- Funciones de Validación de Tarjeta de Crédito ---
 
+  validarNumeroTarjeta(numero: string): boolean {
+    // Implementa el algoritmo de Luhn o una validación de longitud simple
+    // Aquí una validación de longitud y solo dígitos
+    const cleanedNum = numero.replace(/\s/g, ''); // Eliminar espacios
+    return /^[0-9]{13,19}$/.test(cleanedNum);
+  }
+
+  validarFechaExpiracion(fecha: string): boolean {
+    const parts = fecha.split('/');
+    if (parts.length !== 2) {
+      return false;
+    }
+    const month = parseInt(parts[0], 10);
+    const year = parseInt(parts[1], 10);
+
+    if (isNaN(month) || isNaN(year) || month < 1 || month > 12) {
+      return false;
+    }
+
+    const currentYear = new Date().getFullYear() % 100; // Obtener los dos últimos dígitos del año actual
+    const currentMonth = new Date().getMonth() + 1; // getMonth() es 0-indexed
+
+    // Convertir el año de expiración a un formato de cuatro dígitos (ej: 23 -> 2023)
+    const fullExpYear = 2000 + year;
+
+    if (fullExpYear < (new Date().getFullYear()) || (fullExpYear === (new Date().getFullYear()) && month < currentMonth)) {
+      return false; // La tarjeta ya expiró
+    }
+
+    return true;
+  }
+
+  validarCvv(cvv: string): boolean {
+    return /^[0-9]{3,4}$/.test(cvv);
+  }
+
+  validarNombreTitular(nombre: string): boolean {
+    // Permite letras, espacios y algunos caracteres especiales como guiones o apóstrofes
+    return /^[a-zA-Z\s'-]+$/.test(nombre);
+  }
+
+  // --- Fin Funciones de Validación de Tarjeta de Crédito ---
+
+  guardarPago(): void {
     if (this.errorStock) {
       alert(this.errorStock);
       return;
+    }
+
+    // Validar campos de tarjeta solo si el método de pago es 'TARJETA'
+    if (this.pago.metodo === 'TARJETA') {
+      if (!this.validarNumeroTarjeta(this.pago.numeroTarjeta || '')) {
+        this.errorTarjeta = 'Número de tarjeta inválido.';
+        alert(this.errorTarjeta);
+        return;
+      }
+      if (!this.validarFechaExpiracion(this.pago.fechaExpiracion || '')) {
+        this.errorTarjeta = 'Fecha de expiración inválida o expirada.';
+        alert(this.errorTarjeta);
+        return;
+      }
+      if (!this.validarCvv(this.pago.cvv || '')) {
+        this.errorTarjeta = 'CVV inválido.';
+        alert(this.errorTarjeta);
+        return;
+      }
+      if (!this.validarNombreTitular(this.pago.nombreTitular || '')) {
+        this.errorTarjeta = 'Nombre del titular inválido.';
+        alert(this.errorTarjeta);
+        return;
+      }
+      this.errorTarjeta = ''; // Limpiar errores si todo es válido
     }
 
     if (this.esEdicion && this.pagoId !== null) {

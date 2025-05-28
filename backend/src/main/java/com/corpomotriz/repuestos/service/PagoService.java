@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +40,12 @@ public class PagoService {
                 .estado(pagoDTO.getEstado())
                 .fechaPago(LocalDateTime.now())
                 .usuario(usuario)
+                // --- Asignar campos de tarjeta si existen en el DTO ---
+                .numeroTarjeta(pagoDTO.getNumeroTarjeta())
+                .fechaExpiracionTarjeta(pagoDTO.getFechaExpiracion())
+                .cvvTarjeta(pagoDTO.getCvv())
+                .nombreTitularTarjeta(pagoDTO.getNombreTitular())
+                // --- Fin Asignación ---
                 .build();
 
         Pago pagoGuardado = pagoRepository.save(pago);
@@ -76,11 +81,30 @@ public class PagoService {
         pago.setMonto(pagoDTO.getMonto());
         pago.setEstado(pagoDTO.getEstado());
 
+        // --- Actualizar campos de tarjeta si el método es TARJETA o si se proporcionan ---
+        if ("TARJETA".equalsIgnoreCase(pagoDTO.getMetodo())) { // O simplemente si los campos vienen no nulos
+            pago.setNumeroTarjeta(pagoDTO.getNumeroTarjeta());
+            pago.setFechaExpiracionTarjeta(pagoDTO.getFechaExpiracion());
+            pago.setCvvTarjeta(pagoDTO.getCvv());
+            pago.setNombreTitularTarjeta(pagoDTO.getNombreTitular());
+        } else {
+            // Si el método cambia a no TARJETA, podrías limpiar los campos de tarjeta existentes
+            pago.setNumeroTarjeta(null);
+            pago.setFechaExpiracionTarjeta(null);
+            pago.setCvvTarjeta(null);
+            pago.setNombreTitularTarjeta(null);
+        }
+        // --- Fin Actualización campos de tarjeta ---
+
         if (pagoDTO.getEmailUsuario() != null && !pagoDTO.getEmailUsuario().isBlank()) {
             Usuario usuario = usuarioRepository.findByEmail(pagoDTO.getEmailUsuario())
                     .orElseThrow(() -> new RuntimeException("Usuario con email '" + pagoDTO.getEmailUsuario() + "' no encontrado."));
             pago.setUsuario(usuario);
         }
+
+        // Si el estado del pago cambia a 'COMPLETADO' o 'RECHAZADO' en una edición por administrador,
+        // podrías añadir lógica para evitar que se modifique el stock o para revertirlo si se rechaza.
+        // Esto va más allá del scope de la petición actual, pero es una consideración.
 
         Pago pagoActualizado = pagoRepository.save(pago);
         return mapToResponseDTO(pagoActualizado);
@@ -116,7 +140,12 @@ public class PagoService {
                 .estado(pago.getEstado())
                 .fechaPago(pago.getFechaPago())
                 .productos(productos)
+                // --- Mapear campos de tarjeta a Response DTO ---
+                .numeroTarjeta(pago.getNumeroTarjeta())
+                .fechaExpiracion(pago.getFechaExpiracionTarjeta())
+                .cvv(pago.getCvvTarjeta())
+                .nombreTitular(pago.getNombreTitularTarjeta())
+                // --- Fin Mapeo ---
                 .build();
     }
-
 }
