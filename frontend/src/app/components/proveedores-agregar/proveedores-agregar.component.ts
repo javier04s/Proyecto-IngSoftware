@@ -25,7 +25,7 @@ export class ProveedoresAgregarComponent {
         const nomRepetido = proveedores.some(p => p.nombre.toLowerCase().trim() === this.proveedor.nombre.toLowerCase().trim());
         const tlfValido = /^\d{4}-\d{7}$/.test(this.proveedor.telefono);
         const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.proveedor.email);
-        const plzValido = /^[1-12]\d*\s(días|día|mes|meses|semana|semanas)$/.test(this.proveedor.plazoEntrega);
+        /*const plzValido = /^[1-12]\d*\s(días|día|mes|meses|semana|semanas)$/.test(this.proveedor.plazoEntrega);*/
 
         if (nomRepetido) {
           alert("Ya existe un proveedor con ese nombre.");
@@ -42,10 +42,10 @@ export class ProveedoresAgregarComponent {
           return this.interfazProveedores();
         }
 
-        if (!plzValido) {
+        /*if (!plzValido) {
           alert("Recuerda que debes ingresar un plazo válido");
           return this.interfazProveedores();
-        }
+        }*/
 
         this.proveedorServicio.AgregarProveedor(this.proveedor).subscribe({
           next: () => {
