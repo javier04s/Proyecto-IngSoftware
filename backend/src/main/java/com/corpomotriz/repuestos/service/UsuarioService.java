@@ -45,6 +45,31 @@ public class UsuarioService {
         return toDTO(usuarioRepository.save(usuario));
     }
 
+    public UsuarioDTO updateUser(Integer id, UsuarioCrearDTO dto) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        if (!usuario.getEmail().equals(dto.getEmail()) &&
+                usuarioRepository.findByEmail(dto.getEmail()).isPresent()) {
+            throw new RuntimeException("El email ya está registrado");
+        }
+
+        usuario.setNombre(dto.getNombre());
+        usuario.setEmail(dto.getEmail());
+        usuario.setContrasena(dto.getContrasena());
+        usuario.setRol(dto.getRol());
+
+        usuario = usuarioRepository.save(usuario);
+        return toDTO(usuario);
+    }
+
+    public void deleteUser(Integer id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        usuarioRepository.delete(usuario);
+    }
+
+
     private UsuarioDTO toDTO(Usuario usuario) {
         return UsuarioDTO.builder()
                 .id(usuario.getId().intValue())

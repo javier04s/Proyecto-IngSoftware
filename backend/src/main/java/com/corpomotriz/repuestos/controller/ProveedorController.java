@@ -50,4 +50,18 @@ public class ProveedorController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProveedorDTO> modificarProveedor(@PathVariable Integer id,
+                                                           @Valid @RequestBody ProveedorCrearDTO dto) {
+        ProveedorDTO actualizado = proveedorService.updateProveedor(id, dto);
+        return ResponseEntity.ok(actualizado);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarProveedor(@PathVariable Integer id) {
+        proveedorService.deleteProveedor(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

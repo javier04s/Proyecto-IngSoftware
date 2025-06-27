@@ -68,6 +68,46 @@ public class ProductoService implements iProductoService {
         return convertirAProductoDTO(producto);
     }
 
+    @Override
+    @Transactional
+    public boolean deleteProducto(Integer id) {
+        Optional<Producto> producto = productoRepository.findById(id);
+        if (producto.isPresent()) {
+            productoRepository.delete(producto.get());
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    @Transactional
+    public Optional<ProductoDTO> updateProducto(Integer id, ProductoCrearDTO dto) {
+        Optional<Producto> optionalProducto = productoRepository.findById(id);
+        if (optionalProducto.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Producto producto = optionalProducto.get();
+
+        Proveedor proveedor = proveedorRepository.findById(dto.getProveedorId())
+                .orElseThrow(() -> new RuntimeException("Proveedor no encontrado"));
+
+        Usuario creador = usuarioRepository.findById(dto.getCreadoPorId())
+                .orElseThrow(() -> new RuntimeException("Usuario creador no encontrado"));
+
+        producto.setNombre(dto.getNombre());
+        producto.setDescripcion(dto.getDescripcion());
+        producto.setPrecio(dto.getPrecio());
+        producto.setCantidad(dto.getCantidad());
+        producto.setMarca(dto.getMarca());
+        producto.setProveedor(proveedor);
+        producto.setCreadoPor(creador);
+
+        productoRepository.save(producto);
+
+        return Optional.of(convertirAProductoDTO(producto));
+    }
+
     private ProductoDTO convertirAProductoDTO(Producto producto) {
         Proveedor proveedor = producto.getProveedor();
         return ProductoDTO.builder()

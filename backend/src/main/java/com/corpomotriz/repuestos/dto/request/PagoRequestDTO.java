@@ -37,9 +37,6 @@ public class PagoRequestDTO {
     @NotEmpty(message = "Debe haber al menos un producto en el pago.")
     private List<PagoProductoDTO> productos;
 
-    // --- Nuevos campos para la tarjeta de crédito (con validaciones básicas) ---
-    // Estas validaciones se aplicarán si los campos se envían.
-    // Podrías hacerlas condicionales al método de pago en el servicio o con grupos de validación.
     @Pattern(regexp = "^[0-9]{13,19}$", message = "Número de tarjeta inválido. Debe contener entre 13 y 19 dígitos.")
     private String numeroTarjeta;
 
@@ -52,5 +49,4 @@ public class PagoRequestDTO {
     @Size(min = 2, max = 255, message = "El nombre del titular debe tener entre 2 y 255 caracteres.")
     @Pattern(regexp = "^[a-zA-Z\\s'-]+$", message = "El nombre del titular solo debe contener letras y espacios.")
     private String nombreTitular;
-    // --- Fin Nuevos campos ---
 }

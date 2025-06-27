@@ -7,6 +7,7 @@ import com.corpomotriz.repuestos.model.Producto;
 import com.corpomotriz.repuestos.model.Proveedor;
 import com.corpomotriz.repuestos.repository.ProductoRepository;
 import com.corpomotriz.repuestos.repository.ProveedorRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -57,6 +58,29 @@ public class ProveedorService {
                 .build();
 
         return toDTO(proveedorRepository.save(proveedor));
+    }
+
+    @Transactional
+    public ProveedorDTO updateProveedor(Integer id, ProveedorCrearDTO dto) {
+        Proveedor proveedor = proveedorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Proveedor no encontrado"));
+
+        proveedor.setNombre(dto.getNombre());
+        proveedor.setTelefono(dto.getTelefono());
+        proveedor.setEmail(dto.getEmail());
+        proveedor.setLocalizacion(dto.getLocalizacion());
+        proveedor.setEspecializacion(dto.getEspecializacion());
+        proveedor.setPlazoEntrega(dto.getPlazoEntrega());
+
+        return toDTO(proveedorRepository.save(proveedor));
+    }
+
+    @Transactional
+    public void deleteProveedor(Integer id) {
+        if (!proveedorRepository.existsById(id)) {
+            throw new RuntimeException("Proveedor no encontrado");
+        }
+        proveedorRepository.deleteById(id);
     }
 
     private ProveedorDTO toDTO(Proveedor proveedor) {

@@ -46,4 +46,15 @@ public class PagoController {
         return pago.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarPago(@PathVariable Integer id) {
+        boolean eliminado = pagoService.eliminarPago(id);
+        if (eliminado) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

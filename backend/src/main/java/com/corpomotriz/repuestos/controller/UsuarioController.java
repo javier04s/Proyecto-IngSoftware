@@ -39,4 +39,25 @@ public class UsuarioController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UsuarioDTO> modificarUsuario(@PathVariable Integer id, @Valid @RequestBody UsuarioCrearDTO dto) {
+        try {
+            UsuarioDTO usuarioActualizado = usuarioService.updateUser(id, dto);
+            return ResponseEntity.ok(usuarioActualizado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarUsuario(@PathVariable Integer id) {
+        try {
+            usuarioService.deleteUser(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
 }

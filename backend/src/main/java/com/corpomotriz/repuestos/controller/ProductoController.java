@@ -39,4 +39,24 @@ public class ProductoController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarProducto(@PathVariable Integer id) {
+        boolean eliminado = productoService.deleteProducto(id);
+        if (eliminado) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductoDTO> modificarProducto(
+            @PathVariable Integer id,
+            @RequestBody ProductoCrearDTO productoCrearDTO) {
+
+        return productoService.updateProducto(id, productoCrearDTO)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
 }

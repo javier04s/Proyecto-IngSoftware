@@ -23,10 +23,8 @@ public class PagoResponseDTO {
 
     private List<PagoProductoDTO> productos;
 
-    // --- Nuevos campos para la tarjeta de crédito ---
     private String numeroTarjeta;
     private String fechaExpiracion;
     private String cvv;
     private String nombreTitular;
-    // --- Fin Nuevos campos ---
 }

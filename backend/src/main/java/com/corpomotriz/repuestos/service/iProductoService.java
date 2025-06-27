@@ -10,4 +10,6 @@ public interface iProductoService {
     List<ProductoDTO> getAllProductos();
     Optional<ProductoDTO> getProductoById(Integer id);
     ProductoDTO createProducto(ProductoCrearDTO dto);
+    boolean deleteProducto(Integer id);
+    Optional<ProductoDTO> updateProducto(Integer id, ProductoCrearDTO dto);
 }
