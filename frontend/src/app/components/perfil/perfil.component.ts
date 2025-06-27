@@ -13,15 +13,15 @@ export class PerfilComponent implements OnInit {
   usuario: Usuario | null = null;
   usuariosRegistrados: Usuario[] = [];
 
+
   constructor(
     private usuarioService: UsuarioService,
     private router: Router
   ) { }
 
-  // En PerfilComponent.ts
   ngOnInit(): void {
     this.usuario = this.usuarioService.getUsuarioActual();
-    console.log('Objeto usuario completo:', this.usuario); // ¡MUY IMPORTANTE!
+    console.log('Objeto usuario completo:', this.usuario);
     if (this.usuario) {
       console.log('Valor de usuario.fechaCreacion:', this.usuario.fechaCreacion);
     }
@@ -29,9 +29,23 @@ export class PerfilComponent implements OnInit {
     this.usuarioService.getAllUsuarios().subscribe((data: Usuario[]) => {
       this.usuariosRegistrados = data;
     });
+
+    this.cargarUsuarios();
+  }
+
+  cargarUsuarios(): void {
+    this.usuarioService.getAllUsuarios().subscribe({
+      next: (data: Usuario[]) => {
+        this.usuariosRegistrados = data;
+      },
+      error: (err) => {
+        console.error('Error al cargar usuarios:', err);
+      }
+    });
   }
 
   irAListaUsuarios(): void {
     this.router.navigate(['/usuarios/registrados']);
   }
+
 }

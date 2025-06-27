@@ -53,6 +53,10 @@ export class AgregarProductoComponent implements OnInit {
     );
   }
 
+  volverMenu(): void {
+    this.router.navigate(['/']);
+  }
+
   onSubmit(): void {
     if (this.agregarProductoForm.valid) {
       this.errorMessage = '';

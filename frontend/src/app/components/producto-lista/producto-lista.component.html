@@ -12,11 +12,11 @@
     <ng-container *ngIf="usuario$ | async as usuario">
       <div *ngIf="usuario && usuario.rol === 'ADMINISTRADOR'">
         <button type="button" class="btn" (click)="interfazAggProducto()"
-          style="background-color:#004A24; color: #fff; display: flex; flex-direction: row-reverse;
+          style="background-color:#198754; color: #fff; display: flex; flex-direction: row-reverse;
           justify-content: flex-start; align-items: center; gap: 10px; padding: 10px 20px;
           border: none; border-radius: 8px; font-weight: 500; transition: background-color 0.3s ease, transform 0.2s ease;"
-          onmouseover="this.style.backgroundColor='#005E2C'; this.style.transform='scale(1.05)'"
-          onmouseout="this.style.backgroundColor='#004A24'; this.style.transform='scale(1)'">
+          onmouseover="this.style.backgroundColor='#98754'; this.style.transform='scale(1.05)'"
+          onmouseout="this.style.backgroundColor='#98754'; this.style.transform='scale(1)'">
           <i class="bi bi-file-earmark-plus"></i> Insertar Producto
         </button>
       </div>
@@ -63,15 +63,137 @@
         <td>{{producto.cantidad}}</td>
         <td>{{producto.marca}}</td>
         <td>
-          <button class="btn btn-sm"
-            style="border-radius: 6px; font-weight: 500; background-color: #0dcaf0; color: white; border: 1px solid #0dcaf0; transition: background-color 0.2s ease, color 0.2s ease;"
-            onmouseover="this.style.backgroundColor='#17a2b8'; this.style.color='white'; borderColor='#17a2b8';"
-            onmouseout="this.style.backgroundColor='#0dcaf0'; this.style.color='white'; borderColor='#0dcaf0';"
-            (click)="abrirDetalles(producto.id)">
-            <i class="bi bi-eye me-1"></i> Detalles
-          </button>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
+            <button class="btn btn-sm" style="border-radius: 6px; font-weight: 500; background-color: #0dcaf0; color: white; border: 1px solid #0dcaf0;
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; padding: 6px 12px;"
+              onmouseover="this.style.backgroundColor='#17a2b8'; this.style.borderColor='#17a2b8'"
+              onmouseout="this.style.backgroundColor='#0dcaf0'; this.style.borderColor='#0dcaf0'"
+              (click)="abrirDetalles(producto.id)">
+              <i class="bi bi-eye me-1"></i> Detalles
+            </button>
+
+            <ng-container *ngIf="usuario$ | async as usuario">
+              <div *ngIf="usuario && usuario.rol === 'ADMINISTRADOR'" style="display: flex; gap: 8px;">
+                <button class="btn btn-sm" style="border-radius: 6px; font-weight: 500; background-color: #f0950d; color: white; border: 1px solid #f0950d;
+          transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; padding: 6px 12px;"
+                  onmouseover="this.style.backgroundColor='#f0950d'; this.style.borderColor='#f0950d'"
+                  onmouseout="this.style.backgroundColor='#f0950d'; this.style.borderColor='#f0950d'"
+                  (click)="iniciarModificar(producto)">
+                  <i class="bi bi-pencil-square me-1"></i> Modificar
+                </button>
+
+                <button class="btn btn-sm" style="border-radius: 6px; font-weight: 500; background-color: #f0330d; color: white; border: 1px solid #f0330d;
+          transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; padding: 6px 12px;"
+                  onmouseover="this.style.backgroundColor='#f0330d'; this.style.borderColor='#f0330d'"
+                  onmouseout="this.style.backgroundColor='#f0330d'; this.style.borderColor='#f0330d'"
+                  (click)="abrirModalEliminar(producto.id)">
+                  <i class="bi bi-trash3 me-1"></i> Eliminar
+                </button>
+              </div>
+            </ng-container>
+          </div>
         </td>
       </tr>
     </tbody>
   </table>
+
+  <div *ngIf="mostrarModalEliminar" class="modal-backdrop"
+    style="position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 1050; display: flex; align-items: center; justify-content: center;">
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalEliminarTitulo"
+      aria-describedby="modalEliminarDescripcion" style="max-width: 400px; width: 90%;">
+      <div class="modal-content" style="background: #2b3038; color: white; border-radius: 12px; padding: 20px;">
+        <h5 id="modalEliminarTitulo" class="modal-title mb-3">Confirmar eliminación</h5>
+        <p id="modalEliminarDescripcion">¿Está seguro que desea eliminar este producto?</p>
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <button class="btn btn-secondary" (click)="cancelarEliminar()">Cancelar</button>
+          <button class="btn btn-danger" (click)="confirmarEliminar()">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="productoAModificar" class="modal-backdrop"
+    style="position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 1050; display: flex; align-items: center; justify-content: center;">
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalModificarTitulo"
+      style="max-width: 500px; width: 95%;">
+      <div class="modal-content" style="background: #2b3038; color: white; border-radius: 12px; padding: 20px;">
+        <h5 id="modalModificarTitulo" class="modal-title mb-3">Modificar Producto</h5>
+
+        <form (ngSubmit)="confirmarModificar()" #formModificar="ngForm" novalidate>
+
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" id="nombre" class="form-control" required [(ngModel)]="productoAModificar.nombre"
+              name="nombre" #nombre="ngModel" />
+            <div *ngIf="nombre.invalid && nombre.touched" class="text-danger small">
+              Nombre es requerido.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="descripcion" class="form-label">Descripción</label>
+            <textarea id="descripcion" class="form-control" required [(ngModel)]="productoAModificar.descripcion"
+              name="descripcion" #descripcion="ngModel" rows="3"></textarea>
+            <div *ngIf="descripcion.invalid && descripcion.touched" class="text-danger small">
+              La descripción es requerida.
+            </div>
+          </div>
+
+
+          <div class="mb-3">
+            <label for="marca" class="form-label">Marca</label>
+            <select id="marca" class="form-select" required [(ngModel)]="productoAModificar.marca" name="marca"
+              #marca="ngModel">
+              <option value="" disabled>Seleccione una marca</option>
+              <option value="Bosch">Bosch</option>
+              <option value="Hyundai Mobis">Hyundai Mobis</option>
+              <option value="Dayco">Dayco</option>
+            </select>
+            <div *ngIf="marca.invalid && marca.touched" class="text-danger small">
+              Marca es requerida.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="precio" class="form-label">Precio</label>
+            <input type="number" id="precio" class="form-control" required min="0" step="0.01"
+              [(ngModel)]="productoAModificar.precio" name="precio" #precio="ngModel" />
+            <div *ngIf="precio.invalid && precio.touched" class="text-danger small">
+              Precio válido es requerido.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="cantidad" class="form-label">Cantidad</label>
+            <input type="number" id="cantidad" class="form-control" required min="0" step="1"
+              [(ngModel)]="productoAModificar.cantidad" name="cantidad" #cantidad="ngModel" />
+            <div *ngIf="cantidad.invalid && cantidad.touched" class="text-danger small">
+              Cantidad válida es requerida.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="proveedor" class="form-label">Proveedor</label>
+            <select id="proveedor" class="form-select" required [(ngModel)]="proveedorIdSeleccionado" name="proveedor"
+              #proveedor="ngModel">
+              <option value="" disabled>Seleccione un proveedor</option>
+              <option *ngFor="let prov of proveedores" [value]="prov.id">
+                {{ prov.nombre }}
+              </option>
+            </select>
+            <div *ngIf="proveedor.invalid && proveedor.touched" class="text-danger small">
+              Seleccione un proveedor válido.
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <button type="button" class="btn btn-secondary" (click)="cancelarModificar()">Cancelar</button>
+            <button type="submit" [disabled]="formModificar.invalid" class="btn btn-primary">Guardar</button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
 </div>

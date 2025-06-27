@@ -1,85 +1,90 @@
-<div class="container mt-5"
-  style="max-width: 600px; background-color: #1e1e1e; padding: 30px; border-radius: 16px; box-shadow: 0 0 20px rgba(0,0,0,0.5); font-family: 'Poppins', sans-serif; color: #f1f1f1;">
+<div class="container-fluid px-4" style="margin-top: 40px; color: #f1f1f1; font-family: 'Poppins', sans-serif;">
 
-  <h2 style="font-weight: 700; text-align: center; margin-bottom: 30px; color: #ffffff;">
-    Añadir Proveedor
-  </h2>
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3">
+    <div class="d-flex align-items-center">
+      <h2 class="mb-0 fw-bold" style="color: #f1f1f1; font-size: 2rem;">
+        <i class="bi bi-person-plus me-2" style="font-size: 1.6rem;"></i> Añadir Proveedor
+      </h2>
+    </div>
+  </div>
 
-  <form (ngSubmit)="onSubmit()">
-    <div class="mb-4">
-      <label for="nombre" style="color: #80bdff; font-weight: 500;">
-        Nombre del Proveedor:
-      </label>
-      <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre del proveedor"
-        [(ngModel)]="proveedor.nombre" required
-        style="background: #2b2b2b; border: 1px solid #444; border-radius: 8px; color: #f1f1f1;" />
+  <form (ngSubmit)="onSubmit()"
+    style="background-color: #1f1f1f; padding: 30px; border-radius: 16px; box-shadow: 0 0 25px rgba(0,0,0,0.4);">
+
+    <div class="row g-4">
+
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label for="nombre" class="form-label" style="color: #80bdff;">Nombre del Proveedor</label>
+          <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre del proveedor"
+            [(ngModel)]="proveedor.nombre" required
+            style="background: #2a2a2a; border: 1px solid #444; color: #f1f1f1; border-radius: 10px;">
+        </div>
+
+        <div class="mb-3">
+          <label for="telefono" class="form-label" style="color: #80bdff;">Teléfono</label>
+          <input type="tel" id="telefono" name="telefono" pattern="\d{4}-\d{7}" placeholder="0414-1533857"
+            class="form-control" [(ngModel)]="proveedor.telefono" required
+            style="background: #2a2a2a; border: 1px solid #444; color: #f1f1f1; border-radius: 10px;">
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label" style="color: #80bdff;">Email</label>
+          <input type="email" id="email" name="email" class="form-control" placeholder="Correo electrónico"
+            [(ngModel)]="proveedor.email" required
+            style="background: #2a2a2a; border: 1px solid #444; color: #f1f1f1; border-radius: 10px;">
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label for="localizacion" class="form-label" style="color: #80bdff;">Localización</label>
+          <input type="text" id="localizacion" name="localizacion" placeholder="Ubicación del proveedor o empresa"
+            class="form-control" [(ngModel)]="proveedor.localizacion" required
+            style="background: #2a2a2a; border: 1px solid #444; color: #f1f1f1; border-radius: 10px;">
+        </div>
+
+        <div class="mb-3">
+          <label for="especializacion" class="form-label" style="color: #80bdff;">Especialización</label>
+          <select id="especializacion" name="especializacion" class="form-control"
+            [(ngModel)]="proveedor.especializacion" required
+            style="background: #2a2a2a; border: 1px solid #444; color: #f1f1f1; border-radius: 10px;">
+            <option value="" disabled selected>Seleccione una opción...</option>
+            <option>Componentes mecánicos</option>
+            <option>Componentes eléctricos</option>
+            <option>Componentes de carrocería</option>
+            <option>Otros</option>
+            <option>No especificado</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="plazoEntrega" class="form-label" style="color: #80bdff;">Plazo de Entrega</label>
+          <input type="text" id="plazoEntrega" name="plazoEntrega" placeholder="Ej: 2 días / 4 meses / 1 semana"
+            class="form-control" [(ngModel)]="proveedor.plazoEntrega" required
+            style="background: #2a2a2a; border: 1px solid #444; color: #f1f1f1; border-radius: 10px;">
+        </div>
+      </div>
+
     </div>
 
-    <div class="mb-4">
-      <label for="telefono" style="color: #80bdff; font-weight: 500;">
-        Teléfono:
-      </label>
-      <input type="tel" id="telefono" name="telefono" class="form-control" pattern="\d{4}-\d{7}"
-        placeholder="0414-1533857" [(ngModel)]="proveedor.telefono" required
-        style="background: #2b2b2b; border: 1px solid #444; border-radius: 8px; color: #f1f1f1;" />
-    </div>
+    <div class="d-flex justify-content-center mt-4 gap-3">
 
-    <div class="mb-4">
-      <label for="email" style="color: #80bdff; font-weight: 500;">
-        Email:
-      </label>
-      <input type="email" id="email" name="email" class="form-control" placeholder="Correo electrónico"
-        [(ngModel)]="proveedor.email" required
-        style="background: #2b2b2b; border: 1px solid #444; border-radius: 8px; color: #f1f1f1;" />
-    </div>
-
-    <div class="mb-4">
-      <label for="localizacion" style="color: #80bdff; font-weight: 500;">
-        Localización:
-      </label>
-      <input type="text" id="localizacion" name="localizacion" class="form-control"
-        placeholder="Ubicación del proveedor o empresa" [(ngModel)]="proveedor.localizacion" required
-        style="background: #2b2b2b; border: 1px solid #444; border-radius: 8px; color: #f1f1f1;" />
-    </div>
-
-    <div class="mb-4">
-      <label for="especializacion" style="color: #80bdff; font-weight: 500;">
-        Especialización:
-      </label>
-      <select id="especializacion" name="especializacion" class="form-control" [(ngModel)]="proveedor.especializacion"
-        required style="background: #2b2b2b; border: 1px solid #444; border-radius: 8px; color: #f1f1f1;">
-        <option value="" selected>Seleccione una opción...</option>
-        <option>Componentes mecánicos</option>
-        <option>Componentes eléctricos</option>
-        <option>Componentes de carrocería</option>
-        <option>Otros</option>
-        <option>No especificado</option>
-      </select>
-    </div>
-
-    <div class="mb-4">
-      <label for="plazoEntrega" style="color: #80bdff; font-weight: 500;">
-        Plazo de Entrega:
-      </label>
-      <input type="text" id="plazoEntrega" name="plazoEntrega" class="form-control"
-        placeholder="Ej: 2 días / 4 meses / 1 semana" [(ngModel)]="proveedor.plazoEntrega" required
-        style="background: #2b2b2b; border: 1px solid #444; border-radius: 8px; color: #f1f1f1;" />
-    </div>
-
-    <div class="d-flex justify-content-between">
-      <button type="submit" class="btn fw-bold"
-        style="background-color: #28a745; color: #fff; padding: 12px 30px; border-radius: 10px; font-size: 16px; transition: 0.3s ease;"
-        onmouseover="this.style.backgroundColor='#218838'; this.style.transform='scale(1.05)'"
-        onmouseout="this.style.backgroundColor='#28a745'; this.style.transform='scale(1)'">
-        Confirmar
-      </button>
       <button type="button" class="btn fw-semibold" (click)="interfazProveedores()"
-        style="padding: 10px 20px; background-color: #dc3545; color: #f1f1f1; border-radius: 10px; border: none; transition: 0.3s ease;"
-        onmouseover="this.style.backgroundColor='#bd2130'; this.style.transform='scale(1.05)'"
-        onmouseout="this.style.backgroundColor='#dc3545'; this.style.transform='scale(1)'">
-        Cancelar
+        style="background: linear-gradient(135deg, #6c757d, #5a6268); color: white; font-weight: 600; padding: 12px 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(108,117,125,0.3); font-size: 16px; transition: all 0.4s ease;"
+        onmouseover="this.style.background='linear-gradient(135deg, #5a6268, #4e555b)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(90,98,104,0.5)';"
+        onmouseout="this.style.background='linear-gradient(135deg, #6c757d, #5a6268)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 10px rgba(108,117,125,0.3)';">
+        <i class="bi bi-arrow-left-circle me-2"></i> Cancelar
+      </button>
+
+      <button type="submit" class="btn fw-bold"
+        style="background-color: #0dcaf0; color: #fff; padding: 12px 30px; border-radius: 10px; font-size: 16px; transition: all 0.3s ease;"
+        onmouseover="this.style.backgroundColor='#17a2b8'; this.style.transform='scale(1.05)';"
+        onmouseout="this.style.backgroundColor='#0dcaf0'; this.style.transform='scale(1)';">
+        <i class="bi bi-check-circle me-2"></i> Confirmar
       </button>
 
     </div>
+
   </form>
 </div>

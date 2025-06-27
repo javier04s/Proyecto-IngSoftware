@@ -11,7 +11,7 @@
     </label>
     <div class="input-group">
       <span class="input-group-text"
-        style="background-color: #28a745; color: #fff; border-radius: 8px 0 0 8px; border: none;">
+        style="background-color: #80bdff; color: #fff; border-radius: 8px 0 0 8px; border: none;">
         <i class="bi bi-person-fill"></i>
       </span>
       <input type="text" class="form-control" [value]="usuario?.nombre" readonly
@@ -25,7 +25,7 @@
     </label>
     <div class="input-group">
       <span class="input-group-text"
-        style="background-color: #28a745; color: #fff; border-radius: 8px 0 0 8px; border: none;">
+        style="background-color: #80bdff; color: #fff; border-radius: 8px 0 0 8px; border: none;">
         <i class="bi bi-envelope-fill"></i>
       </span>
       <input type="email" class="form-control" [value]="usuario?.email" readonly
@@ -39,21 +39,31 @@
     </label>
     <div class="input-group">
       <span class="input-group-text"
-        style="background-color: #28a745; color: #fff; border-radius: 8px 0 0 8px; border: none;">
+        style="background-color: #80bdff; color: #fff; border-radius: 8px 0 0 8px; border: none;">
         <i class="bi bi-calendar-event"></i> </span>
       <input type="text" class="form-control" [value]="usuario?.fechaCreacion | date:'dd/MM/yyyy - h:mm a'" readonly
         style="background-color: #2b2b2b; color: #f1f1f1; border: 1px solid #444; border-left: none; border-radius: 0 8px 8px 0;" />
     </div>
   </div>
 
-  <div class="text-center mt-4" *ngIf="usuario && usuario.rol === 'ADMINISTRADOR'">
-    <button class="btn fw-bold"
-      style="background-color: #28a745; color: #fff; padding: 12px 30px; border-radius: 10px; font-size: 16px; transition: 0.3s ease;"
+  <div class="text-center mt-4" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+
+    <button *ngIf="usuario && usuario.rol === 'ADMINISTRADOR'" class="btn fw-bold"
+      style="background-color: #28a745; color: #fff; padding: 12px 30px; border-radius: 10px; font-size: 16px; transition: 0.3s ease; min-width: 200px;"
       (click)="irAListaUsuarios()"
       onmouseover="this.style.backgroundColor='#218838'; this.style.transform='scale(1.05)'"
       onmouseout="this.style.backgroundColor='#28a745'; this.style.transform='scale(1)'">
       Ver Usuarios Registrados
     </button>
+
+    <button *ngIf="usuario" type="button" class="btn fw-bold"
+      style="background-color: #c0392b; color: #fff; padding: 12px 30px; border-radius: 10px; font-size: 16px; transition: 0.3s ease; min-width: 200px;"
+      onmouseover="this.style.background='linear-gradient(135deg, #a93226, #922b21)'; this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 16px rgba(192, 57, 43, 0.4)';"
+      onmouseout="this.style.background='linear-gradient(135deg, #c0392b, #a93226)'; this.style.transform='scale(1)'; this.style.boxShadow='none';"
+      (click)="$event.stopPropagation();">
+      <i class="bi bi-trash me-1"></i> Eliminar
+    </button>
+
   </div>
 
 </div>

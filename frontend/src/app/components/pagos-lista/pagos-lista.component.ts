@@ -22,6 +22,12 @@ export class PagosListaComponent implements OnInit {
   rolUsuario: string | null = null;
   emailUsuarioActual: string | null = null;
 
+  pagosPorPagina: number = 8;
+  paginaActual: number = 1;
+
+  pagoAEliminarId: number | null = null;
+  mostrarModalEliminar = false;
+
   constructor(
     private pagosService: PagosService,
     private router: Router,
@@ -75,5 +81,52 @@ export class PagosListaComponent implements OnInit {
       const cumpleMonto = !this.montoFiltro || pago.monto >= this.montoFiltro;
       return cumpleEstado && cumpleMonto;
     });
+  }
+
+  pagosPaginados(): PagoResponse[] {
+    const inicio = (this.paginaActual - 1) * this.pagosPorPagina;
+    return this.pagosFiltrados().slice(inicio, inicio + this.pagosPorPagina);
+  }
+
+  get totalPaginas(): number {
+    return Math.ceil(this.pagosFiltrados().length / this.pagosPorPagina);
+  }
+
+  cambiarPagina(nuevaPagina: number): void {
+    if (nuevaPagina >= 1 && nuevaPagina <= this.totalPaginas) {
+      this.paginaActual = nuevaPagina;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  resetearFiltros(): void {
+    this.estadoFiltro = '';
+    this.montoFiltro = null;
+    this.paginaActual = 1;
+  }
+
+  abrirModalEliminar(id: number): void {
+    this.pagoAEliminarId = id;
+    this.mostrarModalEliminar = true;
+  }
+
+  cancelarEliminar(): void {
+    this.pagoAEliminarId = null;
+    this.mostrarModalEliminar = false;
+  }
+
+  confirmarEliminar(): void {
+    if (this.pagoAEliminarId != null) {
+      this.pagosService.eliminarPago(this.pagoAEliminarId).subscribe({
+        next: () => {
+          this.cargarPagos();
+          this.cancelarEliminar();
+        },
+        error: (err) => {
+          console.error('Error al eliminar pago:', err);
+          this.cancelarEliminar();
+        }
+      });
+    }
   }
 }

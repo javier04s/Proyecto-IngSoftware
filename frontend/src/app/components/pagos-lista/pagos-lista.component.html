@@ -11,19 +11,18 @@
 
     <div>
       <button type="button" class="btn" (click)="crearNuevoPago()"
-        style="background-color:#004A24; color: #fff; display: flex; flex-direction: row-reverse;
+        style="background-color:#198754; color: #fff; display: flex; flex-direction: row-reverse;
         justify-content: flex-start; align-items: center; gap: 10px; padding: 10px 20px;
         border: none; border-radius: 8px; font-weight: 500; transition: background-color 0.3s ease, transform 0.2s ease;"
-        onmouseover="this.style.backgroundColor='#005E2C'; this.style.transform='scale(1.05)'"
-        onmouseout="this.style.backgroundColor='#004A24'; this.style.transform='scale(1)'">
+        onmouseover="this.style.backgroundColor='#98754'; this.style.transform='scale(1.05)'"
+        onmouseout="this.style.backgroundColor='#98754'; this.style.transform='scale(1)'">
         <i class="bi bi-file-earmark-plus"></i> Registrar Nuevo Pago
       </button>
     </div>
 
     <div class="d-flex flex-wrap gap-2 ms-md-3 justify-content-center">
 
-      <select [(ngModel)]="estadoFiltro"
-        class="form-select"
+      <select [(ngModel)]="estadoFiltro" class="form-select"
         style="width: 150px; background-color: #2c2f36; color: #fff; border: 1px solid #444; border-radius: 6px; width: 250px;">
         <option value="">Todos los estados</option>
         <option value="COMPLETADO">Completado</option>
@@ -31,9 +30,7 @@
         <option value="RECHAZADO">Rechazado</option>
       </select>
 
-      <input type="number" [(ngModel)]="montoFiltro"
-        class="form-control"
-        placeholder="Monto mínimo"
+      <input type="number" [(ngModel)]="montoFiltro" class="form-control" placeholder="Monto mínimo"
         style="width: 150px; background-color: #2c2f36; color: #fff; border: 1px solid #444; border-radius: 6px; width: 180px;">
     </div>
 
@@ -49,7 +46,7 @@
         <th scope="col"><i class="bi bi-calendar-event"></i> Fecha de Pago</th>
         <th scope="col"><i class="bi bi-clock"></i> Hora</th>
         <th scope="col"><i class="bi bi-envelope"></i> Correo Electronico</th>
-        <th scope="col" *ngIf="rolUsuario === 'ADMINISTRADOR'"><i class="bi bi-eye"></i> Modificar</th>
+        <th scope="col" *ngIf="rolUsuario === 'ADMINISTRADOR'"><i class="bi bi-eye"></i> Detalles</th>
       </tr>
     </thead>
     <tbody>
@@ -66,14 +63,39 @@
         <td>{{ pago.fechaPago | date:'shortTime' }}</td>
         <td>{{ pago.emailUsuario }}</td>
         <td *ngIf="rolUsuario === 'ADMINISTRADOR'">
-          <button class="btn btn-sm d-flex align-items-center" (click)="verDetalles(pago.id)"
-            style="font-size: 14px; margin-left: 75px; background-color: #ff7f00; border-color: #ff7f00; color: white;"
-            onmouseover="this.style.backgroundColor='#e67300'; this.style.borderColor='#e67300';"
-            onmouseout="this.style.backgroundColor='#ff7f00'; this.style.borderColor='#ff7f00';">
-            <i class="bi bi-pencil me-1"></i> Modificar
-          </button>
+          <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+            <button class="btn btn-sm d-flex align-items-center" (click)="verDetalles(pago.id)" style="font-size: 14px; background-color: #f0950d; border: none; color: white; padding: 6px 12px;
+             border-radius: 6px; transition: background-color 0.3s ease, transform 0.2s ease;"
+              onmouseover="this.style.backgroundColor='#e06700'; this.style.transform='scale(1.03)'"
+              onmouseout="this.style.backgroundColor='#f0950d'; this.style.transform='scale(1)'">
+              <i class="bi bi-pencil me-1"></i> Modificar
+            </button>
+
+            <button class="btn btn-sm d-flex align-items-center" (click)="abrirModalEliminar(pago.id)" style="font-size: 14px; background-color: #f0330d; border: none; color: white; padding: 6px 12px;
+             border-radius: 6px; transition: background-color 0.3s ease, transform 0.2s ease;"
+              onmouseover="this.style.backgroundColor='#c82333'; this.style.transform='scale(1.03)'"
+              onmouseout="this.style.backgroundColor='#f0330d'; this.style.transform='scale(1)'">
+              <i class="bi bi-trash3 me-1"></i> Eliminar
+            </button>
+          </div>
         </td>
+
       </tr>
     </tbody>
   </table>
+
+  <div *ngIf="mostrarModalEliminar" class="modal-backdrop"
+    style="position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 1050; display: flex; align-items: center; justify-content: center;">
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalEliminarTitulo"
+      aria-describedby="modalEliminarDescripcion" style="max-width: 400px; width: 90%;">
+      <div class="modal-content" style="background: #2b3038; color: white; border-radius: 12px; padding: 20px;">
+        <h5 id="modalEliminarTitulo" class="modal-title mb-3">Confirmar eliminación</h5>
+        <p id="modalEliminarDescripcion">¿Está seguro que desea eliminar este pago?</p>
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <button class="btn btn-secondary" (click)="cancelarEliminar()">Cancelar</button>
+          <button class="btn btn-danger" (click)="confirmarEliminar()">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

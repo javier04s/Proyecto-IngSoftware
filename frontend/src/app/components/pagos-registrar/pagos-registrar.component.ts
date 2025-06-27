@@ -55,6 +55,10 @@ export class PagosRegistrarComponent implements OnInit {
   ngOnInit(): void {
     this.cargarProductos();
 
+    if (this.rolUsuario === 'USUARIO') {
+      this.pago.estado = 'PENDIENTE';
+    }
+
     const email = this.authService.getEmailUsuario();
     if (email) {
       this.pago.emailUsuario = email;

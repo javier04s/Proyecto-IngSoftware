@@ -24,6 +24,15 @@ export class ProductoService {
   getProductoById(id: number) {
     return this.clienteHttp.get<Producto>(`http://localhost:8080/productos/${id}`);
   }
+
+  actualizarProducto(id: number, producto: ProductoCrearDTO): Observable<Producto> {
+    return this.clienteHttp.put<Producto>(`${this.urlBase}/${id}`, producto);
+  }
+
+  eliminarProducto(id: number): Observable<void> {
+    return this.clienteHttp.delete<void>(`${this.urlBase}/${id}`);
+  }
+
   obtenerProveedores(): Observable<Proveedor[]> {
     return this.clienteHttp.get<Proveedor[]>('http://localhost:8080/proveedores');
   }
@@ -31,4 +40,5 @@ export class ProductoService {
   obtenerProductosPorProveedor(proveedorId: number): Observable<Producto[]> {
     return this.clienteHttp.get<Producto[]>(`http://localhost:8080/proveedores/detalle/${proveedorId}/productos`);
   }
+
 }

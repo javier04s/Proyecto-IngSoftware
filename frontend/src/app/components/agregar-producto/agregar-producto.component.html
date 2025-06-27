@@ -1,87 +1,113 @@
-<div class="container mt-5"
-  style="max-width: 600px; background-color: #1e1e1e; padding: 30px; border-radius: 16px; box-shadow: 0 0 20px rgba(0,0,0,0.5); font-family: 'Poppins', sans-serif; color: #f1f1f1;">
+<div class="container-fluid px-4" style="margin-top: 40px; color: #f1f1f1; font-family: 'Poppins', sans-serif;">
 
-  <h2 style="font-weight: 700; text-align: center; margin-bottom: 30px; color: #ffffff;">Agregar Producto</h2>
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3">
+    <div class="d-flex align-items-center">
+      <h3 class="mb-0" style="color: #f1f1f1; font-size: 2.2rem; font-weight: 700;">
+        <i class="bi bi-box2-heart me-2" style="font-size: 1.6rem;"></i> Agregar Producto
+      </h3>
+    </div>
+  </div>
 
-  <form [formGroup]="agregarProductoForm" (ngSubmit)="onSubmit()">
-    <div class="mb-4">
-      <label for="nombre" style="color: #80bdff; font-weight: 500;">Nombre del Producto:</label>
-      <input type="text" id="nombre" formControlName="nombre" placeholder="Ej: Motor Eléctrico" class="form-control"
-        style="background: #2b2b2b; border: 1px solid #444; border-radius: 8px; color: #f1f1f1;"
-        [class.is-invalid]="agregarProductoForm.get('nombre')?.invalid && agregarProductoForm.get('nombre')?.touched" />
-      <div *ngIf="agregarProductoForm.get('nombre')?.invalid && agregarProductoForm.get('nombre')?.touched"
-        class="invalid-feedback">El nombre es requerido.</div>
+  <form [formGroup]="agregarProductoForm" (ngSubmit)="onSubmit()"
+    style="background-color: #1f1f1f; padding: 30px; border-radius: 16px; box-shadow: 0 0 25px rgba(0,0,0,0.4);">
+
+    <div class="row g-4">
+
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label for="nombre" class="form-label" style="color: #80bdff;">Nombre del Producto</label>
+          <input type="text" id="nombre" formControlName="nombre" placeholder="Ej: Motor Eléctrico" class="form-control"
+            style="background: #2a2a2a; border: 1px solid #444; color: #f1f1f1; border-radius: 10px;"
+            [class.is-invalid]="agregarProductoForm.get('nombre')?.invalid && agregarProductoForm.get('nombre')?.touched">
+          <div *ngIf="agregarProductoForm.get('nombre')?.invalid && agregarProductoForm.get('nombre')?.touched"
+            class="invalid-feedback">El nombre es requerido.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="precio" class="form-label" style="color: #80bdff;">Precio</label>
+          <input type="number" id="precio" formControlName="precio" step="0.01" placeholder="Ej: 49.99"
+            class="form-control"
+            style="background: #2a2a2a; border: 1px solid #444; color: #f1f1f1; border-radius: 10px;"
+            [class.is-invalid]="agregarProductoForm.get('precio')?.invalid && agregarProductoForm.get('precio')?.touched">
+          <div *ngIf="agregarProductoForm.get('precio')?.invalid && agregarProductoForm.get('precio')?.touched"
+            class="invalid-feedback">Debe ingresar un precio válido.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="cantidad" class="form-label" style="color: #80bdff;">Cantidad</label>
+          <input type="number" id="cantidad" formControlName="cantidad" placeholder="Ej: 10" class="form-control"
+            style="background: #2a2a2a; border: 1px solid #444; color: #f1f1f1; border-radius: 10px;"
+            [class.is-invalid]="agregarProductoForm.get('cantidad')?.invalid && agregarProductoForm.get('cantidad')?.touched">
+          <div *ngIf="agregarProductoForm.get('cantidad')?.invalid && agregarProductoForm.get('cantidad')?.touched"
+            class="invalid-feedback">La cantidad debe ser mayor a 0.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="marca" class="form-label" style="color: #80bdff;">Marca</label>
+          <select id="marca" formControlName="marca" class="form-control"
+            style="background: #2a2a2a; border: 1px solid #444; color: #f1f1f1; border-radius: 10px;"
+            [class.is-invalid]="agregarProductoForm.get('marca')?.invalid && agregarProductoForm.get('marca')?.touched">
+            <option value="" disabled selected>Seleccione una marca</option>
+            <option value="Bosch">Bosch</option>
+            <option value="Dayco">Dayco</option>
+            <option value="Hyundai Mobis">Hyundai Mobis</option>
+          </select>
+          <div *ngIf="agregarProductoForm.get('marca')?.invalid && agregarProductoForm.get('marca')?.touched"
+            class="invalid-feedback">Seleccione una marca.</div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+
+        <div class="mb-3">
+          <label for="proveedorId" class="form-label" style="color: #80bdff;">Proveedor</label>
+          <select id="proveedorId" formControlName="proveedorId" class="form-control"
+            style="background: #2a2a2a; border: 1px solid #444; color: #f1f1f1; border-radius: 10px;"
+            [class.is-invalid]="agregarProductoForm.get('proveedorId')?.invalid && agregarProductoForm.get('proveedorId')?.touched">
+            <option value="" disabled selected>Seleccione un proveedor</option>
+            <option *ngFor="let proveedor of proveedores" [value]="proveedor.id">{{ proveedor.nombre }}</option>
+          </select>
+          <div
+            *ngIf="agregarProductoForm.get('proveedorId')?.invalid && agregarProductoForm.get('proveedorId')?.touched"
+            class="invalid-feedback">Seleccione un proveedor.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="descripcion" class="form-label" style="color: #80bdff;">Descripción</label>
+          <textarea id="descripcion" formControlName="descripcion" rows="7" class="form-control"
+            placeholder="Breve descripción del producto"
+            style="background: #2a2a2a; border: 1px solid #444; color: #f1f1f1; border-radius: 10px; resize: none;"
+            [class.is-invalid]="agregarProductoForm.get('descripcion')?.invalid && agregarProductoForm.get('descripcion')?.touched"></textarea>
+          <div
+            *ngIf="agregarProductoForm.get('descripcion')?.invalid && agregarProductoForm.get('descripcion')?.touched"
+            class="invalid-feedback">La descripción es requerida.</div>
+        </div>
+
+      </div>
     </div>
 
-    <div class="mb-4">
-      <label for="descripcion" style="color: #80bdff; font-weight: 500;">Descripción:</label>
-      <textarea id="descripcion" rows="3" formControlName="descripcion" placeholder="Breve descripción del producto"
-        class="form-control" style="background: #2b2b2b; border: 1px solid #444; border-radius: 8px; color: #f1f1f1;"
-        [class.is-invalid]="agregarProductoForm.get('descripcion')?.invalid && agregarProductoForm.get('descripcion')?.touched"></textarea>
-      <div *ngIf="agregarProductoForm.get('descripcion')?.invalid && agregarProductoForm.get('descripcion')?.touched"
-        class="invalid-feedback">La descripción es requerida.</div>
-    </div>
-
-    <div class="mb-4">
-      <label for="precio" style="color: #80bdff; font-weight: 500;">Precio:</label>
-      <input type="number" id="precio" step="0.01" formControlName="precio" class="form-control"
-        style="background: #2b2b2b; border: 1px solid #444; border-radius: 8px; color: #f1f1f1;"
-        [class.is-invalid]="agregarProductoForm.get('precio')?.invalid && agregarProductoForm.get('precio')?.touched" />
-      <div *ngIf="agregarProductoForm.get('precio')?.invalid && agregarProductoForm.get('precio')?.touched"
-        class="invalid-feedback">El precio es requerido y debe ser mayor que 0.</div>
-    </div>
-
-    <div class="mb-4">
-      <label for="cantidad" style="color: #80bdff; font-weight: 500;">Cantidad:</label>
-      <input type="number" id="cantidad" formControlName="cantidad" placeholder="Ej: 5" class="form-control"
-        style="background: #2b2b2b; border: 1px solid #444; border-radius: 8px; color: #f1f1f1;"
-        [class.is-invalid]="agregarProductoForm.get('cantidad')?.invalid && agregarProductoForm.get('cantidad')?.touched" />
-      <div *ngIf="agregarProductoForm.get('cantidad')?.invalid && agregarProductoForm.get('cantidad')?.touched"
-        class="invalid-feedback">La cantidad es requerida y debe ser al menos 1.</div>
-    </div>
-
-    <div class="mb-4">
-      <label for="marca" style="color: #80bdff; font-weight: 500;">Marca:</label>
-      <select id="marca" formControlName="marca" class="form-control"
-        style="background: #2b2b2b; border: 1px solid #444; border-radius: 8px; color: #f1f1f1;"
-        [class.is-invalid]="agregarProductoForm.get('marca')?.invalid && agregarProductoForm.get('marca')?.touched">
-        <option value="" disabled selected>Seleccione una marca</option>
-        <option value="Bosch">Bosch</option>
-        <option value="Dayco">Dayco</option>
-        <option value="Hyundai Mobis">Hyundai Mobis</option>
-      </select>
-      <div *ngIf="agregarProductoForm.get('marca')?.invalid && agregarProductoForm.get('marca')?.touched"
-        class="invalid-feedback">La marca es requerida.</div>
-    </div>
-
-
-    <div class="mb-4">
-      <label for="proveedorId" style="color: #80bdff; font-weight: 500;">Proveedor:</label>
-      <select id="proveedorId" formControlName="proveedorId" class="form-control"
-        style="background: #2b2b2b; border: 1px solid #444; border-radius: 8px; color: #f1f1f1;"
-        [class.is-invalid]="agregarProductoForm.get('proveedorId')?.invalid && agregarProductoForm.get('proveedorId')?.touched">
-        <option value="" disabled selected>Seleccione un proveedor</option>
-        <option *ngFor="let proveedor of proveedores" [value]="proveedor.id">{{ proveedor.nombre }}</option>
-      </select>
-      <div *ngIf="agregarProductoForm.get('proveedorId')?.invalid && agregarProductoForm.get('proveedorId')?.touched"
-        class="invalid-feedback">El proveedor es requerido.</div>
-    </div>
-
-    <div *ngIf="errorMessage" class="alert alert-danger mt-3" role="alert">
+    <div *ngIf="errorMessage" class="alert alert-danger mt-4" role="alert">
       {{ errorMessage }}
     </div>
 
-    <div *ngIf="successMessage" class="alert alert-success mt-3" role="alert">
+    <div *ngIf="successMessage" class="alert alert-success mt-4" role="alert">
       {{ successMessage }}
     </div>
 
     <div class="d-flex justify-content-center mt-4">
-      <button type="submit" class="btn fw-bold"
-        style="background-color: #28a745; color: #fff; padding: 12px 30px; border-radius: 10px; font-size: 16px; transition: 0.3s ease;"
-        [disabled]="agregarProductoForm.invalid"
-        onmouseover="this.style.backgroundColor='#218838'; this.style.transform='scale(1.05)'"
-        onmouseout="this.style.backgroundColor='#28a745'; this.style.transform='scale(1)'">
-        Confirmar
+
+      <button type="button" (click)="volverMenu()" class="btn"
+        style="background: linear-gradient(135deg, #6c757d, #5a6268); color: white; font-weight: 600; padding: 12px 30px; border: none; border-radius: 12px; box-shadow: 0 4px 10px rgba(108, 117, 125, 0.3); transition: all 0.4s ease; margin-right: 15px;"
+        onmouseover="this.style.background='linear-gradient(135deg, #5a6268, #4e555b)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(90, 98, 104, 0.5)'"
+        onmouseout="this.style.background='linear-gradient(135deg, #6c757d, #5a6268)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 10px rgba(108, 117, 125, 0.3)'">
+        <i class="bi bi-arrow-left-circle me-2"></i> Volver al menú
+      </button>
+
+      <button type="submit" class="btn" style="background-color: #0dcaf0; color: white; font-weight: 600; padding: 12px 30px; border: none; border-radius: 10px;
+        transition: background-color 0.3s ease, transform 0.2s ease;" [disabled]="agregarProductoForm.invalid"
+        onmouseover="this.style.backgroundColor='#17a2b8'; this.style.transform='scale(1.05)'"
+        onmouseout="this.style.backgroundColor='#0dcaf0'; this.style.transform='scale(1)'">
+        <i class="bi bi-check-circle me-2"></i> Confirmar
       </button>
     </div>
   </form>

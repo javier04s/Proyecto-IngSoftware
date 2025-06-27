@@ -26,4 +26,8 @@ export class PagosService {
   actualizarPago(id: number, pago: PagoRequest): Observable<PagoResponse> {
     return this.clienteHttp.put<PagoResponse>(`${this.urlBase}/${id}`, pago);
   }
+
+  eliminarPago(id: number): Observable<void> {
+    return this.clienteHttp.delete<void>(`${this.urlBase}/${id}`);
+  }
 }

@@ -25,5 +25,13 @@ export class ProveedorService {
     return this.clienteHttp.get<Proveedor>(url);
   }
 
+  actualizarProveedor(id: number, proveedor: Proveedor): Observable<Proveedor> {
+    return this.clienteHttp.put<Proveedor>(`${this.urlBase}/${id}`, proveedor);
+  }
+
+  eliminarProveedor(id: number): Observable<void> {
+    return this.clienteHttp.delete<void>(`${this.urlBase}/${id}`);
+  }
+
   constructor() { }
 }

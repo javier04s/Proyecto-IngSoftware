@@ -80,4 +80,13 @@ export class UsuarioService {
       this.usuarioSubject.next(JSON.parse(usuarioString));
     }
   }
+
+  modificarUsuario(id: number, usuario: UsuarioCrearDTO): Observable<Usuario> {
+    return this.http.put<Usuario>(`${this.apiUrl}/${id}`, usuario);
+  }
+
+  eliminarUsuario(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
 }

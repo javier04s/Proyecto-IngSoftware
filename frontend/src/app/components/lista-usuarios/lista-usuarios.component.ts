@@ -14,12 +14,18 @@ export class ListaUsuariosComponent implements OnInit {
   constructor(private usuarioService: UsuarioService) { }
 
   ngOnInit(): void {
+    this.cargarUsuarios();
+  }
+
+  cargarUsuarios(): void {
     this.usuarioService.getAllUsuarios().subscribe({
       next: (data) => {
         this.usuariosRegistrados = data;
+        this.error = null;
       },
       error: (err) => {
         this.error = 'Error al cargar los usuarios.';
+        this.usuariosRegistrados = [];
       }
     });
   }

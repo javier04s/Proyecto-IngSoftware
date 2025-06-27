@@ -1,12 +1,12 @@
 import { Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Proveedor } from '../../model/proveedor';
 import { ProveedorService } from '../../services/proveedor.service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-proveedores-agregar',
-  imports: [FormsModule],
+  imports: [FormsModule, ReactiveFormsModule],
   templateUrl: './proveedores-agregar.component.html'
 })
 export class ProveedoresAgregarComponent {
