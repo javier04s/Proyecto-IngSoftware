@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 export interface Usuario {
   id: number;
@@ -16,7 +17,7 @@ export class AuthService {
   private usuarioSubject: BehaviorSubject<Usuario | null>;
   public usuario$: Observable<Usuario | null>;
 
-  constructor() {
+  constructor(private router: Router) {
     const usuarioJson = localStorage.getItem('usuario');
     this.usuarioSubject = new BehaviorSubject<Usuario | null>(
       usuarioJson ? JSON.parse(usuarioJson) : null
@@ -31,6 +32,9 @@ export class AuthService {
   logout() {
     localStorage.removeItem('usuario');
     this.usuarioSubject.next(null);
+    this.router.navigate(['productos']).then(() => {
+      window.location.reload(); // <--- Aquí está la recarga forzada
+    });
   }
 
   isAuthenticated(): boolean {

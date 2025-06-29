@@ -41,9 +41,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   cerrarSesion(): void {
-    this.authService.logout(); // Usamos el logout de AuthService
-    // El 'usuario$' observable se encargará de actualizar estaAutenticado y rolUsuario a null
-    this.router.navigate(['/']);
+    this.authService.logout();
   }
 
   confirmarCerrarSesion(): void {

@@ -1,14 +1,24 @@
+// src/app/services/usuario.service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { UsuarioCrearDTO } from '../model/usuario';
 import { Router } from '@angular/router';
+
 
 export interface Usuario {
   id: number;
   nombre: string;
   email: string;
   fechaCreacion?: string;
+  rol: string;
+  contrasena?: string;
+}
+
+export interface UsuarioCrearDTO {
+  nombre: string;
+  email: string;
+  contrasena: string;
   rol: string;
 }
 
@@ -27,9 +37,7 @@ export class UsuarioService {
   private usuarioSubject = new BehaviorSubject<Usuario | null>(null);
   usuario$ = this.usuarioSubject.asObservable();
 
-  private router: Router;
-
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     const usuarioString = localStorage.getItem('usuario');
     if (usuarioString) {
       this.usuarioSubject.next(JSON.parse(usuarioString));
@@ -64,6 +72,9 @@ export class UsuarioService {
 
   logout(): void {
     this.clearUsuario();
+    this.router.navigate(['productos']).then(() => {
+      window.location.reload(); // <--- Aquí está la recarga forzada
+    });
   }
 
   getAllUsuarios(): Observable<Usuario[]> {

@@ -39,7 +39,7 @@ public class UsuarioService {
                 .email(dto.getEmail())
                 .contrasena(dto.getContrasena())
                 .rol(dto.getRol())
-                .fechaCreacion(LocalDateTime.now())
+                .fechaCreacion(LocalDateTime.now()) // Se establece solo al crear
                 .build();
 
         return toDTO(usuarioRepository.save(usuario));
@@ -58,6 +58,8 @@ public class UsuarioService {
         usuario.setEmail(dto.getEmail());
         usuario.setContrasena(dto.getContrasena());
         usuario.setRol(dto.getRol());
+        // NO MODIFICAR usuario.setFechaCreacion(dto.getFechaCreacion());
+        // La fecha de creación no se actualiza aquí, se mantiene la original.
 
         usuario = usuarioRepository.save(usuario);
         return toDTO(usuario);
@@ -68,7 +70,6 @@ public class UsuarioService {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         usuarioRepository.delete(usuario);
     }
-
 
     private UsuarioDTO toDTO(Usuario usuario) {
         return UsuarioDTO.builder()

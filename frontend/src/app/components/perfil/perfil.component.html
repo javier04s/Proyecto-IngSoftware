@@ -14,7 +14,9 @@
         style="background-color: #80bdff; color: #fff; border-radius: 8px 0 0 8px; border: none;">
         <i class="bi bi-person-fill"></i>
       </span>
-      <input type="text" class="form-control" [value]="usuario?.nombre" readonly
+      <input *ngIf="!isEditing" type="text" class="form-control" [value]="usuario?.nombre" readonly
+        style="background-color: #2b2b2b; color: #f1f1f1; border: 1px solid #444; border-left: none; border-radius: 0 8px 8px 0;" />
+      <input *ngIf="isEditing" type="text" class="form-control" [(ngModel)]="editedUsuario!.nombre" name="nombre"
         style="background-color: #2b2b2b; color: #f1f1f1; border: 1px solid #444; border-left: none; border-radius: 0 8px 8px 0;" />
     </div>
   </div>
@@ -28,8 +30,43 @@
         style="background-color: #80bdff; color: #fff; border-radius: 8px 0 0 8px; border: none;">
         <i class="bi bi-envelope-fill"></i>
       </span>
-      <input type="email" class="form-control" [value]="usuario?.email" readonly
+      <input *ngIf="!isEditing" type="email" class="form-control" [value]="usuario?.email" readonly
         style="background-color: #2b2b2b; color: #f1f1f1; border: 1px solid #444; border-left: none; border-radius: 0 8px 8px 0;" />
+      <input *ngIf="isEditing" type="email" class="form-control" [(ngModel)]="editedUsuario!.email" name="email"
+        style="background-color: #2b2b2b; color: #f1f1f1; border: 1px solid #444; border-left: none; border-radius: 0 8px 8px 0;" />
+    </div>
+  </div>
+
+  <div class="mb-4" *ngIf="isEditing">
+    <label class="form-label fw-semibold" style="color: #80bdff;">
+      Nueva Contraseña:
+    </label>
+    <div class="input-group">
+      <span class="input-group-text"
+        style="background-color: #80bdff; color: #fff; border-radius: 8px 0 0 8px; border: none;">
+        <i class="bi bi-key-fill"></i>
+      </span>
+      <input type="password" class="form-control" [(ngModel)]="newPassword" name="newPassword"
+        (ngModelChange)="onPasswordChange()"
+        style="background-color: #2b2b2b; color: #f1f1f1; border: 1px solid #444; border-left: none; border-radius: 0 8px 8px 0;" />
+    </div>
+  </div>
+
+  <div class="mb-4" *ngIf="isEditing">
+    <label class="form-label fw-semibold" style="color: #80bdff;">
+      Confirmar Contraseña:
+    </label>
+    <div class="input-group">
+      <span class="input-group-text"
+        style="background-color: #80bdff; color: #fff; border-radius: 8px 0 0 8px; border: none;">
+        <i class="bi bi-key-fill"></i>
+      </span>
+      <input type="password" class="form-control" [(ngModel)]="confirmPassword" name="confirmPassword"
+        (ngModelChange)="onPasswordChange()"
+        style="background-color: #2b2b2b; color: #f1f1f1; border: 1px solid #444; border-left: none; border-radius: 0 8px 8px 0;" />
+    </div>
+    <div *ngIf="passwordTouched && !passwordsMatch" class="text-danger mt-1">
+      Las contraseñas no coinciden.
     </div>
   </div>
 
@@ -48,7 +85,7 @@
 
   <div class="text-center mt-4" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
 
-    <button *ngIf="usuario && usuario.rol === 'ADMINISTRADOR'" class="btn fw-bold"
+    <button *ngIf="usuario && usuario.rol === 'ADMINISTRADOR' && !isEditing" class="btn fw-bold"
       style="background-color: #28a745; color: #fff; padding: 12px 30px; border-radius: 10px; font-size: 16px; transition: 0.3s ease; min-width: 200px;"
       (click)="irAListaUsuarios()"
       onmouseover="this.style.backgroundColor='#218838'; this.style.transform='scale(1.05)'"
@@ -56,14 +93,44 @@
       Ver Usuarios Registrados
     </button>
 
-    <button *ngIf="usuario" type="button" class="btn fw-bold"
-      style="background-color: #c0392b; color: #fff; padding: 12px 30px; border-radius: 10px; font-size: 16px; transition: 0.3s ease; min-width: 200px;"
-      onmouseover="this.style.background='linear-gradient(135deg, #a93226, #922b21)'; this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 16px rgba(192, 57, 43, 0.4)';"
-      onmouseout="this.style.background='linear-gradient(135deg, #c0392b, #a93226)'; this.style.transform='scale(1)'; this.style.boxShadow='none';"
-      (click)="$event.stopPropagation();">
-      <i class="bi bi-trash me-1"></i> Eliminar
-    </button>
+    <ng-container *ngIf="!isEditing">
+      <button *ngIf="usuario" type="button" class="btn fw-bold"
+        style="background-color: #007bff; color: #fff; padding: 12px 30px; border-radius: 10px; font-size: 16px; transition: 0.3s ease; min-width: 200px;"
+        (click)="iniciarEdicion()"
+        onmouseover="this.style.background='linear-gradient(135deg, #0056b3, #004085)'; this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 16px rgba(0, 123, 255, 0.4)';"
+        onmouseout="this.style.background='linear-gradient(135deg, #007bff, #0056b3)'; this.style.transform='scale(1)'; this.style.boxShadow='none';"
+      >
+        <i class="bi bi-pencil-square me-1"></i> Modificar
+      </button>
 
+      <button *ngIf="usuario" type="button" class="btn fw-bold"
+        style="background-color: #dc3545; color: #fff; padding: 12px 30px; border-radius: 10px; font-size: 16px; transition: 0.3s ease; min-width: 200px;"
+        (click)="eliminarPerfil()"
+        onmouseover="this.style.background='linear-gradient(135deg, #bd2130, #a11a26)'; this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 16px rgba(220, 53, 69, 0.4)';"
+        onmouseout="this.style.background='linear-gradient(135deg, #dc3545, #bd2130)'; this.style.transform='scale(1)'; this.style.boxShadow='none';"
+      >
+        <i class="bi bi-trash me-1"></i> Eliminar
+      </button>
+    </ng-container>
+
+    <ng-container *ngIf="isEditing">
+      <button type="button" class="btn fw-bold"
+        style="background-color: #28a745; color: #fff; padding: 12px 30px; border-radius: 10px; font-size: 16px; transition: 0.3s ease; min-width: 200px;"
+        (click)="guardarCambios()"
+        onmouseover="this.style.background='linear-gradient(135deg, #218838, #1e7e34)'; this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 16px rgba(40, 167, 69, 0.4)';"
+        onmouseout="this.style.background='linear-gradient(135deg, #28a745, #218838)'; this.style.transform='scale(1)'; this.style.boxShadow='none';"
+      >
+        <i class="bi bi-check-circle-fill me-1"></i> Guardar Cambios
+      </button>
+
+      <button type="button" class="btn fw-bold"
+        style="background-color: #6c757d; color: #fff; padding: 12px 30px; border-radius: 10px; font-size: 16px; transition: 0.3s ease; min-width: 200px;"
+        (click)="cancelarEdicion()"
+        onmouseover="this.style.background='linear-gradient(135deg, #5a6268, #4e555b)'; this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 16px rgba(108, 117, 125, 0.4)';"
+        onmouseout="this.style.background='linear-gradient(135deg, #6c757d, #5a6268)'; this.style.transform='scale(1)'; this.style.boxShadow='none';"
+      >
+        <i class="bi bi-x-circle-fill me-1"></i> Cancelar
+      </button>
+    </ng-container>
   </div>
-
 </div>
