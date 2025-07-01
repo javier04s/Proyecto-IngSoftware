@@ -35,6 +35,9 @@
       <input *ngIf="isEditing" type="email" class="form-control" [(ngModel)]="editedUsuario!.email" name="email"
         style="background-color: #2b2b2b; color: #f1f1f1; border: 1px solid #444; border-left: none; border-radius: 0 8px 8px 0;" />
     </div>
+    <div *ngIf="isEditing && emailInvalid" class="text-danger mt-1">
+      Por favor, ingresa un formato de correo electrónico válido.
+    </div>
   </div>
 
   <div class="mb-4" *ngIf="isEditing">

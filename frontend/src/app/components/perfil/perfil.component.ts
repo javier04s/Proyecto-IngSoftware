@@ -3,7 +3,7 @@ import { Usuario, UsuarioService } from '../../services/usuario.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../services/auth.service'; // Necesario si usas authService en otros métodos
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-perfil',
@@ -19,17 +19,16 @@ export class PerfilComponent implements OnInit {
   confirmPassword: string = '';
   passwordsMatch: boolean = true;
   passwordTouched: boolean = false;
+  emailInvalid: boolean = false;
 
   constructor(
     private usuarioService: UsuarioService,
     private router: Router,
-    private authService: AuthService // Asegúrate de que AuthService esté inyectado si lo usas
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
-    // Si usas AuthService para manejar el usuario logeado, usa su valor
-    this.usuario = this.authService.usuarioValue; // Obtener usuario del AuthService
-    // Si usuarioService es la única fuente, mantén: this.usuario = this.usuarioService.getUsuarioActual();
+    this.usuario = this.authService.usuarioValue;
 
     if (this.usuario) {
       this.editedUsuario = { ...this.usuario };
@@ -37,8 +36,8 @@ export class PerfilComponent implements OnInit {
       this.confirmPassword = '';
       this.passwordsMatch = true;
       this.passwordTouched = false;
+      this.emailInvalid = false; 
     } else {
-      // Opcional: Si no hay usuario, redirigir a la página de login
       this.router.navigate(['/iniciar-sesion']);
     }
   }
@@ -55,6 +54,7 @@ export class PerfilComponent implements OnInit {
       this.confirmPassword = '';
       this.passwordsMatch = true;
       this.passwordTouched = false;
+      this.emailInvalid = false; 
     }
   }
 
@@ -63,9 +63,26 @@ export class PerfilComponent implements OnInit {
     this.passwordsMatch = this.newPassword === this.confirmPassword;
   }
 
+  
+  onEmailChange(): void {
+    if (this.editedUsuario && this.editedUsuario.email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.com$/;
+      this.emailInvalid = !emailRegex.test(this.editedUsuario.email);
+    } else {
+      this.emailInvalid = true; 
+    }
+  }
+
   guardarCambios(): void {
     if (!this.editedUsuario || !this.editedUsuario.id) {
       alert('No se pudo guardar los cambios. Usuario no válido o ID no encontrado.');
+      return;
+    }
+
+    
+    this.onEmailChange(); 
+    if (this.emailInvalid) {
+      alert('Por favor, ingresa un correo electrónico válido (ej. usuario@dominio.com).');
       return;
     }
 
@@ -77,37 +94,37 @@ export class PerfilComponent implements OnInit {
       }
       this.editedUsuario.contrasena = this.newPassword;
     } else {
-      // Mantener la contraseña existente si no se proporciona una nueva y tu backend lo requiere
       if (this.usuario && this.usuario.contrasena) {
         this.editedUsuario.contrasena = this.usuario.contrasena;
+      } else {
+        alert(
+          'Para actualizar, debes ingresar una nueva contraseña o tu contraseña actual para confirmar (si tu backend lo requiere).'
+        );
+        return;
       }
-      // Considera si tu backend acepta PUT sin contraseña si no se va a cambiar.
-      // Si no, y el usuario no cambia la contraseña, deberías enviarle la antigua.
-      // Tu código actual ya maneja esto.
     }
 
     const usuarioParaBackend: any = {
       nombre: this.editedUsuario.nombre,
       email: this.editedUsuario.email,
-      // No incluimos 'fechaCreacion' aquí, lo cual es correcto para evitar enviarla
       rol: this.editedUsuario.rol,
     };
 
-    // Solo incluye la contraseña si se ha modificado o si el backend la requiere siempre
     if (this.newPassword || (this.usuario && this.usuario.contrasena)) {
-        usuarioParaBackend.contrasena = this.editedUsuario.contrasena || '';
+      usuarioParaBackend.contrasena = this.editedUsuario.contrasena || '';
     }
 
     this.usuarioService.modificarUsuario(this.editedUsuario.id, usuarioParaBackend).subscribe({
       next: (updatedUser) => {
         this.usuario = updatedUser;
-        this.usuarioService.setUsuario(updatedUser); // Actualiza el usuario en el servicio
+        this.usuarioService.setUsuario(updatedUser);
         this.isEditing = false;
         alert('Perfil actualizado exitosamente.');
         this.newPassword = '';
         this.confirmPassword = '';
         this.passwordsMatch = true;
         this.passwordTouched = false;
+        this.emailInvalid = false; 
       },
       error: (err) => {
         console.error('Error al actualizar el perfil:', err);
@@ -123,6 +140,7 @@ export class PerfilComponent implements OnInit {
     this.confirmPassword = '';
     this.passwordsMatch = true;
     this.passwordTouched = false;
+    this.emailInvalid = false; 
   }
 
   eliminarPerfil(): void {
