@@ -98,7 +98,7 @@ export class PerfilComponent implements OnInit {
         this.editedUsuario.contrasena = this.usuario.contrasena;
       } else {
         alert(
-          'Para actualizar, debes ingresar una nueva contraseña o tu contraseña actual para confirmar (si tu backend lo requiere).'
+          'Para actualizar, debes ingresar una nueva contraseña o tu contraseña actual para confirmar.'
         );
         return;
       }
